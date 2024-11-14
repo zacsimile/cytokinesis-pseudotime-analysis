@@ -147,7 +147,8 @@ def imshow_with_profile(ax, im, xl, xu, yl, yu):
     ax.plot([yu,yl],[xl, xu],c='r')
 
 def image_with_profiles(fig, im, xl, xu, yl, yu, channel_names=["MTs", "septin2", "DAPI"], linewidth=25,
-                        precalc_channel_profiles=None, precalc_peaks=None, precalc_fits=None):
+                        precalc_channel_profiles=None, precalc_peaks=None, precalc_fits=None,
+                        precalc_means=None, precalc_midpoints=None, title=None):
     """
     Plot an image, a line profile, and the resulting plots from its line profile.
 
@@ -204,9 +205,15 @@ def image_with_profiles(fig, im, xl, xu, yl, yu, channel_names=["MTs", "septin2"
             if not isinstance(precalc_peaks[i], list):
                 precalc_peaks[i] = [precalc_peaks[i]]
             for j, peaks in enumerate(precalc_peaks[i]):
-                axs_right[i].plot(peaks, ch[peaks], marker[j], c=colors2[j])
-            axs_right[i].axhline(np.mean(ch), linestyle='--', color='gray')
-            axs_right[i].axvline(len(ch)/2, linestyle='--', color='gray')
+                axs_right[i].plot(peaks, ch[peaks], marker[j], c=colors2[j], mew=2, ms=4)
+
+        if precalc_means is not None and precalc_means[i] is not None:
+            # axs_right[i].axhline(np.mean(ch), linestyle='--', color='gray')
+            axs_right[i].axhline(precalc_means[i], linestyle='--', color='gray')
+        
+        if precalc_midpoints is not None and precalc_midpoints[i] is not None:
+            # axs_right[i].axvline(len(ch)/2, linestyle='--', color='gray')
+            axs_right[i].axvline(precalc_midpoints[i], linestyle='--', color='gray')
 
         if precalc_fits is not None and precalc_fits[i] is not None:
             func, coefs = precalc_fits[i]
@@ -215,6 +222,9 @@ def image_with_profiles(fig, im, xl, xu, yl, yu, channel_names=["MTs", "septin2"
             axs_right[i].axhline(np.mean(ch), linestyle='--', color='gray')
 
     axs_right[i].set_xlabel("Distance (pixels)")
+
+    if title is not None:
+        subfigs[0].suptitle(title, c="white")
 
 # ------------------------------ Profile fitting ------------------------------ #
 
