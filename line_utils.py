@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 import skimage.measure as measure 
 import scipy.special as spec
+import scipy.optimize as optimize
+import scipy.signal as signal
 
 # ------------------------------ Line profile loading ------------------------------ #
 
@@ -252,3 +254,124 @@ def gauss_convolved_annulus_approx(x, a, mu, sig, b, r_outer, r_inner):
     inner = _gauss_convolved_semicircle_approx(r_inner, t, sig)
 
     return a*(outer - inner) + b
+
+def fit_tubule_diameter(profile, p0=None, return_dict=False):
+    """
+    File profile as a tubule.
+
+    Parameters
+    ----------
+    profile : np.typing.ArrayLike
+        Array of intensity values, representing cross section of a tubule
+
+    Returns
+    -------
+    outer_diameter : float
+        Outer diameter of the tubule
+    res_lsq : dict, optional
+        Dictionary of fit values.
+    """
+    if p0 is None:
+        r_outer = np.sum(profile>(np.max(profile)/2))/2
+        r_outer = np.sum(profile>np.mean(profile))/2
+        p0 = [
+                np.max(profile), 
+                len(profile)/2, 3, 
+                np.min(profile), 
+                r_outer, 
+                0.95*r_outer,
+            ]  # [A, mu, sig, b, r_outer, r_inner]
+    
+    res_lsq = optimize.least_squares(shape_res, 
+                                     p0, 
+                                     args=(gauss_convolved_annulus_approx, 
+                                           np.arange(profile.shape[0]), 
+                                           profile))
+    
+    outer_diameter = 2*res_lsq.x[4]
+
+    if return_dict:
+        return (outer_diameter, res_lsq)
+    
+    return outer_diameter
+
+def fit_gaussian(profile, p0=None, return_dict = False):
+    if p0 is None:
+        p0 = [np.max(profile), len(profile)/2, 3, np.min(profile)]  # A, mu, sig, b
+    
+    res_lsq = optimize.least_squares(shape_res, 
+                                     p0, 
+                                     args=(gauss, np.arange(profile.shape[0]), profile))
+    
+    fwhm = 2.3548200450309493*res_lsq.x[2]
+
+    if return_dict:
+        return (fwhm, res_lsq)
+    
+    return fwhm
+
+def get_peaks(profile, height=None, width=3):
+    """
+    Get peaks from profile. Essentially a wraped for signal.find_peaks that has
+    a default width and threshold.
+
+    Parameters
+    ----------
+    profile : np.typing.ArrayLike
+        Profile of intensities
+    height : float, optional
+        Minimum peak height
+    width : float, optional
+        Minimum peak width
+
+    Returns
+    -------
+    peaks : np.ndarray
+        Indicies of peaks in profile.
+    peak_props : dict
+        Properties of the peaks
+    height : float
+        The minimum peak height
+    """
+    if height is None:
+        height = np.min(profile)+np.std(profile)
+    peaks, peak_props = signal.find_peaks(profile, height=height, width=width)
+
+    return peaks, peak_props, height
+
+def compute_peak_weights(profile, peaks):
+    # Center the search for peaks on the peak of microtubule signal
+    threshold = np.mean(profile) # np.min(mt)+np.std(mt)
+    idxs = np.flatnonzero(profile>threshold)
+    center = np.sum(idxs*profile[idxs])/(profile[idxs].sum())  # np.mean(np.argwhere(mt>mt_threshold))
+    # sig = np.sum(mt>mt_threshold)/2 #(2.3548200450309493)
+    sig = (np.diff(np.flatnonzero(profile>threshold)[[0,-1]]))/2 #2.3548200450309493
+
+    # weighting discourages use of tall peaks at line profile extremities
+    w = np.exp(-((peaks-center)**2)/(2*sig*sig)) # *septin_grad
+    w = w*(profile[peaks]/profile[peaks].sum())
+
+    return w, center, sig
+
+def find_two_best_peaks(peaks, peak_props, threshold, center, w=1):
+    """ 
+    Find the two most important peaks in a line profile.
+    
+    """
+
+    # select two peaks, on either side of profile_center
+    weighted_peaks = (peak_props['peak_heights']-threshold)*w
+    peaks_lower = peaks[peaks<=center]
+    peaks_upper = peaks[peaks>center]
+
+    try:
+        p0 = peaks_lower[np.argmax(weighted_peaks[peaks<=center])]
+    except ValueError:
+        p0 = -1
+    try:
+        p1 = peaks_upper[np.argmax(weighted_peaks[peaks>center])]
+    except ValueError:
+        p1 = -1
+    # peaks = np.array([p0, p1])
+
+    return p0, p1
