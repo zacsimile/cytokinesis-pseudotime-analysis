@@ -123,7 +123,7 @@ def normalize_line_profiles(line_dfs, inplace=True):
         return line_dfs_norm
     
 
-# ------------------------------ Display ------------------------------ #
+# ------------------------------ Coordinate tools ------------------------------ #
 
 def get_line_profile_endpoints(x, y, angle, length):
     # get line profile start and end coordinates for x, y, angle, length
@@ -138,6 +138,18 @@ def get_line_profile_endpoints(x, y, angle, length):
     # corresponds to (xl, yu) to (xu, yl)
     return (xl, xu, yl, yu)
 
+def get_image_coordinate_from_distance_along_line(ell, xl, xu, yl, yu, length=None):
+    if length is None:
+        length = np.sqrt((xu-xl)**2+(yu-yl)**2)
+    
+    w = ell/length
+    dx = xl+w*(xu-xl)
+    dy = yu+w*(yl-yu)
+
+    return (dx, dy)
+
+# ------------------------------ Display ------------------------------ #
+
 def imshow_with_profile(ax, im, xl, xu, yl, yu):
     # if im.shape[0] > 1:
     #     im = im.max(0)
@@ -149,8 +161,8 @@ def imshow_with_profile(ax, im, xl, xu, yl, yu):
     ax.plot([yu,yl],[xl, xu],c='r')
 
 def image_with_profiles(fig, im, xl, xu, yl, yu, channel_names=["MTs", "septin2", "DAPI"], linewidth=25,
-                        precalc_channel_profiles=None, precalc_peaks=None, precalc_fits=None,
-                        precalc_means=None, precalc_midpoints=None, title=None):
+                        precalc_channel_profiles=None, precalc_peaks=None, precalc_peak_coords=None,
+                        precalc_fits=None, precalc_means=None, precalc_midpoints=None, title=None):
     """
     Plot an image, a line profile, and the resulting plots from its line profile.
 
@@ -170,6 +182,8 @@ def image_with_profiles(fig, im, xl, xu, yl, yu, channel_names=["MTs", "septin2"
         (K, C) array of C channel profiles, which will overlay the calculated profiles.
     precalc_peaks : list
         List of lists of peaks calculated for the line profiles
+    precalc_peak_coords : list
+        List of tupules of image coordinates of peaks
     precalc_fist : list
         List of tuples of the form (function, [coefficients]) containing fits for
         line profiles.
@@ -180,6 +194,10 @@ def image_with_profiles(fig, im, xl, xu, yl, yu, channel_names=["MTs", "septin2"
     axs_left = subfigs[0].subplots(1,1)
 
     imshow_with_profile(axs_left, im, xl, xu, yl, yu)
+
+    if precalc_peak_coords is not None:
+        for tup in precalc_peak_coords:
+            axs_left.plot(tup[1],tup[0],c='orange', marker='x')
 
     chs = measure.profile_line(im.T, 
                               [xl, yu], 
@@ -272,21 +290,22 @@ def fit_tubule_diameter(profile, p0=None, return_dict=False):
         Dictionary of fit values.
     """
     if p0 is None:
-        r_outer = np.sum(profile>(np.max(profile)/2))/2
+        # r_outer = np.sum(profile>(np.max(profile)/2))/2
         r_outer = np.sum(profile>np.mean(profile))/2
+        # r_outer = ((np.diff(np.flatnonzero(profile>np.mean(profile))[[0,-1]]))/2)[0]
         p0 = [
                 np.max(profile), 
                 len(profile)/2, 3, 
                 np.min(profile), 
                 r_outer, 
-                0.95*r_outer,
+                max(0.95*r_outer,r_outer-20),
             ]  # [A, mu, sig, b, r_outer, r_inner]
     
     res_lsq = optimize.least_squares(shape_res, 
-                                     p0, 
-                                     args=(gauss_convolved_annulus_approx, 
-                                           np.arange(profile.shape[0]), 
-                                           profile))
+                                    p0, 
+                                    args=(gauss_convolved_annulus_approx, 
+                                        np.arange(profile.shape[0]), 
+                                        profile))
     
     outer_diameter = 2*res_lsq.x[4]
 
@@ -295,7 +314,7 @@ def fit_tubule_diameter(profile, p0=None, return_dict=False):
     
     return outer_diameter
 
-def fit_gaussian(profile, p0=None, return_dict = False):
+def fit_gaussian_fwhm(profile, p0=None, return_dict=False):
     if p0 is None:
         p0 = [np.max(profile), len(profile)/2, 3, np.min(profile)]  # A, mu, sig, b
     
@@ -345,7 +364,7 @@ def compute_peak_weights(profile, peaks):
     idxs = np.flatnonzero(profile>threshold)
     center = np.sum(idxs*profile[idxs])/(profile[idxs].sum())  # np.mean(np.argwhere(mt>mt_threshold))
     # sig = np.sum(mt>mt_threshold)/2 #(2.3548200450309493)
-    sig = (np.diff(np.flatnonzero(profile>threshold)[[0,-1]]))/2 #2.3548200450309493
+    sig = ((np.diff(np.flatnonzero(profile>threshold)[[0,-1]]))/2)[0] #2.3548200450309493
 
     # weighting discourages use of tall peaks at line profile extremities
     w = np.exp(-((peaks-center)**2)/(2*sig*sig)) # *septin_grad
