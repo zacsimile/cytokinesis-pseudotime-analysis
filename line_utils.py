@@ -239,7 +239,7 @@ def image_with_profiles(fig, im, xl, xu, yl, yu, channel_names=["MTs", "septin2"
             func, coefs = precalc_fits[i]
             xx = np.arange(len(ch))
             axs_right[i].plot(xx, func(xx, *coefs), c="orange")
-            axs_right[i].axhline(np.mean(ch), linestyle='--', color='gray')
+            # axs_right[i].axhline(np.mean(ch), linestyle='--', color='gray')
 
     axs_right[i].set_xlabel("Distance (pixels)")
 
