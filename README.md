@@ -8,7 +8,7 @@ Make sure you have `conda`, ideally install it through [Miniforge](https://githu
 Then run, in this folder,
 
 ```
-conda create -n expansion python=3.9
+conda create -n expansion python=3.11
 conda activate expansion
 pip install -r requirements.txt
 ```

@@ -36,3 +36,14 @@ def pad_rot_and_trans_im(im, angle, x, y, N=2048):
     im_rot = ndi.rotate(im_trans, -angle, axes=(2,1), reshape=False)
 
     return im_rot
+
+def normalize_image(im):
+    """
+    Normalize image to range [0,1] for plotting with matplotlib.
+
+    Expects im axis order CYX.
+    """
+    im_min = im.min(-1).min(-1)
+    im = (im.T-im_min)/(im.max(-1).max(-1)-im_min)
+
+    return im

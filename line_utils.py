@@ -5,6 +5,8 @@ import scipy.special as spec
 import scipy.optimize as optimize
 import scipy.signal as signal
 
+import image_utils
+
 # ------------------------------ Line profile loading ------------------------------ #
 
 
@@ -153,8 +155,7 @@ def get_image_coordinate_from_distance_along_line(ell, xl, xu, yl, yu, length=No
 def imshow_with_profile(ax, im, xl, xu, yl, yu):
     # if im.shape[0] > 1:
     #     im = im.max(0)
-    im_min = im.min(-1).min(-1)
-    im = (im.T-im_min)/(im.max(-1).max(-1)-im_min)
+    im = image_utils.normalize_image(im)
     ax.imshow(im)#, cmap="gray")
     ax.set_axis_off()
     # ax.plot([xl, xu],[yu,yl],c='r')
@@ -394,3 +395,26 @@ def find_two_best_peaks(peaks, peak_props, threshold, center, w=1):
     # peaks = np.array([p0, p1])
 
     return p0, p1
+
+def rescale_inds(n, l, h):
+    """
+    Rescale indices of length n so that the index at l is at position 0 and the 
+    index at h is at position 1.
+
+    Parameters
+    ----------
+    n : int
+        Length of line
+    l : int
+        Index of lower limit
+    h : int
+        Index of upper limit
+
+    Return
+    ------
+    xnew : np.typing.ArrayLike
+        Rescaled coordinate space
+    """
+    xx = np.arange(n)
+    xnew = (xx - xx[l])/(xx[h]-xx[l])
+    return xnew

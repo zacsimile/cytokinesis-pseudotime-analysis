@@ -1,4 +1,5 @@
 import numpy as np
+from sklearn.decomposition import PCA
 
 def dpoly(p):
     """
@@ -62,3 +63,63 @@ def point_poly_dist(x0, y0, p, return_coords=True):
         return (dist, xp, yp)
 
     return dist
+
+def pca(features, n_components=2, transform=False, fit=False):
+    """
+    Normalize and compute pca on features
+
+    Parameters
+    ----------
+    features : np.typing.ArrayLike
+        (n_samples, n_features) matrix.
+    
+    Returns
+    -------
+    pca : sklearn.decomposition.PCA
+        PCA object
+    """
+    # z-norm features
+    features = (features - features.mean(0))/features.std(0)
+
+    # Compute PCA
+    pca = PCA(n_components=n_components)
+    pca.fit(features)
+
+    if transform:
+        xx, yy = pca.transform(features).T[:2,:]
+        if fit:
+            fit = np.polyfit(xx, yy, 3)
+            return pca, (xx, yy), fit
+        return pca, (xx, yy)
+
+    return pca
+
+
+def sort_by_point_plane_dist(xx, yy, fit, nbins=None):
+    """
+
+    Sort features by point-plane distance from (xx,yy) to
+    the line described by fit.
+
+    Parameters
+    ----------
+    xx, yy : np.typing.ArrayLike
+        2D point locations to map onto line
+    fit : np.typing.ArrayLike
+        Poly as defined in np.polyfit 
+
+    Returns
+    -------
+    permutation : np.typing.ArrayLike
+        Vector of indices sorting points
+    """
+
+    # Sort along line after collapsing via point-plane distance
+    _, xp, _ = point_poly_dist(xx, yy, fit)
+    permutation = np.argsort(xp)
+    
+    # Rebin as needed
+    if nbins is not None:
+        permutation = np.split(permutation, nbins)
+    
+    return permutation
