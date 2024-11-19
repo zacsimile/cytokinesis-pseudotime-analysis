@@ -97,7 +97,7 @@ def merge_df_information(source, target, id_key="Label", mapped_keys=None):
             except (AttributeError, TypeError):
                 pass
     
-    target = target.dropna()
+    # target = target.dropna()
 
     return target
 
