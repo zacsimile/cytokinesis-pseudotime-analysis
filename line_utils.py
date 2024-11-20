@@ -418,3 +418,44 @@ def rescale_inds(n, ll, ul):
     xx = np.arange(n)
     xnew = (xx - xx[ll])/(xx[ul]-xx[ll])
     return xnew
+
+def find_central_pos(im, xl, xu=None, zl=None, zu=None, ch=0):
+    """
+    Draw a line profile and fit the channel ch to a Gaussian. Return the mean
+    of the Gaussian.
+
+    Used to find z-position of microtubule bundle in xz slice.
+
+    Parameters
+    ----------
+    im : np.typing.ArrayLike
+        CYX (or CZX) image
+    xl : float
+        Location of horizontal line to fit
+    xu : float
+        Other coordinate of first axis
+    zl, zu : float
+        Coordinate of second axis
+    ch : int
+        Channel to use for fitting
+
+    Returns
+    -------
+    z_coord : float
+        Central position of the fit object.
+    """
+    if xu is None:
+        xu = xl
+    if zl is None:
+        zl = 0
+    if zu is None:
+        zu = im.shape[1]-1
+
+    chs = measure.profile_line(im.T, 
+                              [xl, zu], 
+                              [xu, zl], 
+                              linewidth=25)
+    _, res_lsq_mt = fit_gaussian_fwhm(chs[ch,...], return_dict=True)
+    z_coord = res_lsq_mt.x[1]
+
+    return z_coord

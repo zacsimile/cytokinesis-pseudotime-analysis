@@ -56,6 +56,9 @@ def normalize_image(im):
 
 class NDImage:
     def __init__(self, image_path):
+        """ Designed to be slightly after than AICSImage for ND files,
+        by skipping Java for the array manipulation. 5-11x faster
+        if processing only once (AICSImage caches mean values)."""
         im = AICSImage(image_path)
 
         self.shape = im.shape[1:]
@@ -73,12 +76,13 @@ class NDImage:
             chs = range(self.shape[0])[keys]
         else:
             chs = range(self.shape[0])[keys[0]]
-        sliced_ds = np.empty((len(chs), *self.shape[1:]))
+
+        new_stack = []        
         for ch in chs:
             if isinstance(keys, tuple):
-                sliced_ds[ch,...] = self._images[ch][keys[1:]]
+                new_stack.append(self._images[ch][keys[1:]])
             else:
-                sliced_ds[ch,...] = self._images[ch]
+                new_stack.append(self._images[ch])
     
-        return sliced_ds
+        return np.stack(new_stack, axis=0)
     
