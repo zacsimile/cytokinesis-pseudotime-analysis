@@ -396,7 +396,7 @@ def find_two_best_peaks(peaks, peak_props, threshold, center, w=1):
 
     return p0, p1
 
-def rescale_inds(n, l, h):
+def rescale_inds(n, ll, ul):
     """
     Rescale indices of length n so that the index at l is at position 0 and the 
     index at h is at position 1.
@@ -405,9 +405,9 @@ def rescale_inds(n, l, h):
     ----------
     n : int
         Length of line
-    l : int
+    ll : int
         Index of lower limit
-    h : int
+    ul : int
         Index of upper limit
 
     Return
@@ -416,5 +416,5 @@ def rescale_inds(n, l, h):
         Rescaled coordinate space
     """
     xx = np.arange(n)
-    xnew = (xx - xx[l])/(xx[h]-xx[l])
+    xnew = (xx - xx[ll])/(xx[ul]-xx[ll])
     return xnew

@@ -1,5 +1,11 @@
+import os
+
 import numpy as np
+
 import scipy.ndimage as ndi
+
+from aicsimageio import AICSImage
+import tifffile as tf
 
 def pad_rot_and_trans_im(im, angle, x, y, N=2048):
     """
@@ -47,3 +53,32 @@ def normalize_image(im):
     im = (im.T-im_min)/(im.max(-1).max(-1)-im_min)
 
     return im
+
+class NDImage:
+    def __init__(self, image_path):
+        im = AICSImage(image_path)
+
+        self.shape = im.shape[1:]
+        self._images = {}
+        self.channel_names = []
+
+        base_path = os.path.splitext(image_path)[0]
+        for i, ch in enumerate(im.channel_names):
+            image_path_ch = f"{base_path}_w{i+1}{ch}.TIF"
+            self._images[i] = tf.imread(image_path_ch)
+            self.channel_names.append(ch)
+
+    def __getitem__(self, keys):
+        if not isinstance(keys, tuple):
+            chs = range(self.shape[0])[keys]
+        else:
+            chs = range(self.shape[0])[keys[0]]
+        sliced_ds = np.empty((len(chs), *self.shape[1:]))
+        for ch in chs:
+            if isinstance(keys, tuple):
+                sliced_ds[ch,...] = self._images[ch][keys[1:]]
+            else:
+                sliced_ds[ch,...] = self._images[ch]
+    
+        return sliced_ds
+    
