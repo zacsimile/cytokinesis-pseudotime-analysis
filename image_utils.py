@@ -1,10 +1,10 @@
 import os
 
 import numpy as np
-
 import scipy.ndimage as ndi
-
 import tifffile as tf
+
+import math_utils
 
 def pad_rot_and_trans_im(im, angle, x, y, N=2048):
     """
@@ -52,6 +52,37 @@ def normalize_image(im):
     im = (im.T-im_min)/(im.max(-1).max(-1)-im_min)
 
     return im
+
+def image_cylindrical_coordinates(im, xc, yc, zc, ang_xy):
+    """
+    Compute the cylindirical coordinates of a 3D image along a line
+    with the centroid (xc, yc, zc) at an angle ang_xy in the xy plane.
+
+    Parameters
+    ----------
+    im : np.typing.ArrayLike
+        CZYX or ZYX
+    xc, yc, zc : float
+        Line centroid in Euclidean space
+    ang_xy : float
+        Angle of the line in xy space
+    """
+    if len(im.shape) > 3:
+        shape = im.shape[1:]
+    else:
+        shape = im.shape
+
+    Z, Y, X = np.meshgrid(*[range(n) for n in shape], indexing='ij')
+    Z, Y, X = Z - zc, Y - yc, X - xc  # center
+
+    ang = ang_xy*np.pi/180  # convert to radians
+
+    # establish cylindrical coordinate space along line 
+    r, theta, z = math_utils.cart2cyl(Z, 
+                                      X*np.sin(ang)+Y*np.cos(ang), 
+                                      X*np.cos(ang)-Y*np.sin(ang))
+
+    return r, theta, z
 
 class NDImage:
     def __init__(self, image_path):
