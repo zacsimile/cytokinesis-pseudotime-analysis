@@ -85,7 +85,7 @@ def image_cylindrical_coordinates(im, xc, yc, zc, ang_xy):
     return r, theta, z
 
 
-def extract_channel_targets_from_filename(fn, wvls=[488, 568, 647]):
+def extract_channel_targets_from_filename(fn, wvls=[488, 568, 647], return_binned=True):
     """ 
     For each wavelength, return the target name. 
 
@@ -94,22 +94,36 @@ def extract_channel_targets_from_filename(fn, wvls=[488, 568, 647]):
     fn : str
         Filename
     wvls : list
-        List of wavelengths to check for
+        List of wavelengths to check for. Can be multiple wavelengths per list 
+        element (binning).
 
     Returns
     -------
     chs_dict : dict
         Dictionary of targets keyed on wavelength
     """
-    chs = [el for el in fn.split('_') if any([str(wvl) in el for wvl in wvls])]
-
-    # TODO: Convert to dict comprehension
+    binned_wvl = []
     chs_dict = {}
-    for ch in chs:
-        split_ch = ch.split(f"-")
-        # NOTE that this changes a-tub to atub
-        wvl, target = split_ch[-1], "".join(split_ch[0:-1])
-        chs_dict[wvl] = target
+    for el in fn.split('_'):
+        for wvl in wvls:
+            if isinstance(wvl, list):
+                for w in wvl:
+                    if str(w) in el:
+                        # choose wvl[0] as the bin
+                        if wvl[0] not in binned_wvl:
+                            binned_wvl.append(wvl[0])
+                        target = el.split(str(w))[0][:-1]
+                        chs_dict[str(wvl[0])] = target
+                        break
+            else:
+                if str(wvl) in el:
+                    if wvl not in binned_wvl:
+                        binned_wvl.append(wvl)
+                    target = el.split(str(wvl))[0][:-1]
+                    chs_dict[str(wvl)] = target
+
+    if return_binned:
+        return chs_dict, binned_wvl
 
     return chs_dict
 
