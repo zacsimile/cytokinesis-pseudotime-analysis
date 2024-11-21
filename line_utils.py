@@ -396,6 +396,32 @@ def find_two_best_peaks(peaks, peak_props, threshold, center, w=1):
 
     return p0, p1
 
+def find_septin_peaks(im, x, y, angle, length, mt_ch=0, septin_ch=2):
+
+     # Compute the line end points
+    xl, xu, yl, yu = get_line_profile_endpoints(x, y, angle, length)
+
+    chs = measure.profile_line(im.T, 
+                               [xl, yu], 
+                               [xu, yl], 
+                               linewidth=25)
+
+    mt, septin = chs[:,mt_ch], chs[:,septin_ch]
+
+    # --------- Fit septin peaks ---------
+
+    # Find peaks in the septin channel
+    peaks, peak_props, septin_threshold = get_peaks(septin)
+    # weight the peaks by the MT channel signal
+    w, profile_center, _ = compute_peak_weights(mt, peaks)
+    # Find the two peaks most likely to be septin rings
+    p0, p1 = find_two_best_peaks(peaks, peak_props, septin_threshold, profile_center, w)
+    
+    # Get the distance between the peaks
+    dX = np.abs(p0-p1)
+
+    return p0, p1, dX
+
 def rescale_inds(n, ll, ul):
     """
     Rescale indices of length n so that the index at l is at position 0 and the 

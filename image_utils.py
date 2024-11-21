@@ -84,8 +84,64 @@ def image_cylindrical_coordinates(im, xc, yc, zc, ang_xy):
 
     return r, theta, z
 
-class NDImage:
-    def __init__(self, image_path):
+def extract_channel_targets_from_filename(fn, wvls=[488, 568, 648]):
+    """ 
+    For each wavelength, return the target name. 
+    
+    Parameters
+    ----------
+    fn : str
+        Filename
+    wvls : list
+        List of wavelengths to check for
+
+    Returns
+    -------
+    chs_dict : dict
+        Dictionary of targets keyed on wavelength
+    """
+    chs = [el for el in fn.split('_') if any([str(wvl) in el for wvl in wvls])]
+
+    # TODO: Convert to dict comprehension
+    chs_dict = {}
+    for ch in chs:
+        split_ch = ch.split('-')
+        wvl, target = split_ch[1], split_ch[0]
+        chs_dict[wvl] = target
+    
+    return chs_dict
+
+class Image:
+    def __init__(self, image_path, dc=1, dz=1, dy=1, dx=1):
+        self._image_path = image_path
+
+        self._shape_c = 1
+        self._shape_z = 1
+        self._shape_y = 1
+        self._shape_x = 1
+
+        self._dc = dc
+        self._dz = dz
+        self._dy = dy
+        self._dx = dx
+
+        self._metadata = {}
+
+    @property
+    def shape(self):
+        """ CZYX """
+        return (self._shape_c, self._shape_z, self._shape_y, self._shape_x)
+    
+    @property
+    def voxel_size(self):
+        """ Return voxel size in um """
+        return (self._dc, self._dz, self._dy, self._dx)
+    
+    def __getitem__(self, keys):
+        raise NotImplementedError("Implemented in a derived class.")
+
+class NDImage(Image):
+    def __init__(self, image_path, dc=1, dz=1, dy=1, dx=1):
         """Read ND files with TIFs.
 
         Example format:
@@ -112,7 +168,9 @@ class NDImage:
 
         """
 
-        with open(image_path, "r") as fp:
+        super().__init__(image_path, dc, dz, dy, dx)
+
+        with open(self._image_path, "r") as fp:
             data = fp.read().splitlines()
             # Get rid of EndFile and everything after
             data = data[:data.index('"EndFile"')]
@@ -135,11 +193,6 @@ class NDImage:
             assert z == self._shape_z
             self._shape_y = y
             self._shape_x = x
-
-    @property
-    def shape(self):
-        """ CZYX """
-        return (self._shape_c, self._shape_z, self._shape_y, self._shape_x)
 
     def __getitem__(self, keys):
         if not isinstance(keys, tuple):
