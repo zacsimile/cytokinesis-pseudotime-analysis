@@ -1,13 +1,12 @@
 numpy
 scipy
 scikit-learn
+scikit-image
 pandas
 matplotlib
 python_tsp
 tifffile==2024.9.20
 seaborn
 jupyterlab
-aicsimageio
-bioformats_jar
 pillow
 openpyxl

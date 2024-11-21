@@ -4,7 +4,6 @@ import numpy as np
 
 import scipy.ndimage as ndi
 
-from aicsimageio import AICSImage
 import tifffile as tf
 
 def pad_rot_and_trans_im(im, angle, x, y, N=2048):
@@ -56,20 +55,60 @@ def normalize_image(im):
 
 class NDImage:
     def __init__(self, image_path):
-        """ Designed to be slightly after than AICSImage for ND files,
-        by skipping Java for the array manipulation. 5-11x faster
-        if processing only once (AICSImage caches mean values)."""
-        im = AICSImage(image_path)
+        """Read ND files with TIFs.
 
-        self.shape = im.shape[1:]
+        Example format:
+            "NDInfoFile", Version 2.0
+            "Description", Multi Dimensions Experiment
+            "StartTime1", 20240719 14:19:15
+            "DoTimelapse", FALSE
+            "NTimePoints", 1
+            "DoStage", FALSE
+            "DoWave", TRUE
+            "NWavelengths", 3
+            "WaveName1", "CSU561"
+            "WaveDoZ1", TRUE
+            "WaveName2", "CSU491"
+            "WaveDoZ2", TRUE
+            "WaveName3", "CSU405 QUAD"
+            "WaveDoZ3", TRUE
+            "DoZSeries", TRUE
+            "NZSteps", 66
+            "ZStepSize", 1
+            "WaveInFileName", TRUE
+            "NEvents", 0
+            "EndFile"
+
+        """
+
+        with open(image_path, "r") as fp:
+            data = fp.read().splitlines()
+            # Get rid of EndFile and everything after
+            data = data[:data.index('"EndFile"')]
+            data_list = [line.split(',') for line in data]
+            self._metadata = {el[0].strip().replace('"',""): el[1].strip().replace('"',"") for el in data_list}
+
+        # self.shape = im.shape[1:]
+        self._shape_c = int(self._metadata["NWavelengths"])
+        self._shape_z = int(self._metadata["NZSteps"])
         self._images = {}
-        self.channel_names = []
+        if self._shape_c > 0:
+            self.channel_names = [self._metadata[f"WaveName{n+1}"] for n in range(self._shape_c)]
 
-        base_path = os.path.splitext(image_path)[0]
-        for i, ch in enumerate(im.channel_names):
-            image_path_ch = f"{base_path}_w{i+1}{ch}.TIF"
-            self._images[i] = tf.imread(image_path_ch)
-            self.channel_names.append(ch)
+            base_path = os.path.splitext(image_path)[0]
+            for i, ch in enumerate(self.channel_names):
+                image_path_ch = f"{base_path}_w{i+1}{ch}.TIF"
+                self._images[i] = tf.imread(image_path_ch)
+
+            z, y, x = self._images[0].shape
+            assert z == self._shape_z
+            self._shape_y = y
+            self._shape_x = x
+
+    @property
+    def shape(self):
+        """ CZYX """
+        return (self._shape_c, self._shape_z, self._shape_y, self._shape_x)
 
     def __getitem__(self, keys):
         if not isinstance(keys, tuple):
