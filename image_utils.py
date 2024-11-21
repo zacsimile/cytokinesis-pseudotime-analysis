@@ -84,10 +84,11 @@ def image_cylindrical_coordinates(im, xc, yc, zc, ang_xy):
 
     return r, theta, z
 
-def extract_channel_targets_from_filename(fn, wvls=[488, 568, 648]):
+
+def extract_channel_targets_from_filename(fn, wvls=[488, 568, 647]):
     """ 
     For each wavelength, return the target name. 
-    
+
     Parameters
     ----------
     fn : str
@@ -105,10 +106,11 @@ def extract_channel_targets_from_filename(fn, wvls=[488, 568, 648]):
     # TODO: Convert to dict comprehension
     chs_dict = {}
     for ch in chs:
-        split_ch = ch.split('-')
-        wvl, target = split_ch[1], split_ch[0]
+        split_ch = ch.split(f"-")
+        # NOTE that this changes a-tub to atub
+        wvl, target = split_ch[-1], "".join(split_ch[0:-1])
         chs_dict[wvl] = target
-    
+
     return chs_dict
 
 class Image:
