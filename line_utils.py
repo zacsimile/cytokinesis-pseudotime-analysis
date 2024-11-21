@@ -455,7 +455,7 @@ def find_central_pos(im, xl, xu=None, zl=None, zu=None, ch=0):
                               [xl, zu], 
                               [xu, zl], 
                               linewidth=25)
-    _, res_lsq_mt = fit_gaussian_fwhm(chs[ch,...], return_dict=True)
+    _, res_lsq_mt = fit_gaussian_fwhm(chs[...,ch], return_dict=True)
     z_coord = res_lsq_mt.x[1]
 
     return z_coord
