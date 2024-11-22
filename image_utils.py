@@ -53,7 +53,7 @@ def normalize_image(im):
 
     return im
 
-def image_cylindrical_coordinates(im, xc, yc, zc, ang_xy):
+def image_cylindrical_coordinates(im, xc, yc, zc, ang_xy, dx=1, dy=1, dz=1):
     """
     Compute the cylindirical coordinates of a 3D image along a line
     with the centroid (xc, yc, zc) at an angle ang_xy in the xy plane.
@@ -66,6 +66,8 @@ def image_cylindrical_coordinates(im, xc, yc, zc, ang_xy):
         Line centroid in Euclidean space
     ang_xy : float
         Angle of the line in xy space
+    dx, dy, dz : float
+        pixel size along x, y and z
     """
     if len(im.shape) > 3:
         shape = im.shape[1:]
@@ -73,7 +75,7 @@ def image_cylindrical_coordinates(im, xc, yc, zc, ang_xy):
         shape = im.shape
 
     Z, Y, X = np.meshgrid(*[range(n) for n in shape], indexing='ij')
-    Z, Y, X = Z - zc, Y - yc, X - xc  # center
+    Z, Y, X = dz*(Z - zc), dy*(Y - yc), dx*(X - xc)  # center
 
     ang = ang_xy*np.pi/180  # convert to radians
 
@@ -214,7 +216,7 @@ class NDImage(Image):
         if not isinstance(keys, tuple):
             chs = range(self.shape[0])[keys]
         else:
-            chs = range(self.shape[0])[keys[0]]
+            chs = np.arange(self.shape[0])[keys[0]]
 
         new_stack = []        
         for ch in chs:
