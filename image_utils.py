@@ -159,7 +159,7 @@ class Image:
         raise NotImplementedError("Implemented in a derived class.")
 
 class NDImage(Image):
-    def __init__(self, image_path, dc=1, dz=1, dy=1, dx=1):
+    def __init__(self, image_path, dc=1, dz=1, dy=1, dx=1, load_sorted=True):
         """Read ND files with TIFs.
 
         Example format:
@@ -202,10 +202,16 @@ class NDImage(Image):
         if self._shape_c > 0:
             self.channel_names = [self._metadata[f"WaveName{n+1}"] for n in range(self._shape_c)]
 
+            if load_sorted:
+                """ Load image so channels are sorted high to low by wavelength. """
+                sorted_ch = np.argsort([int(x.split('CSU')[1].split(' ')[0]) for x in self.channel_names])[::-1]
+            else:
+                sorted_ch = range(len(self.channel_names))
+
             base_path = os.path.splitext(image_path)[0]
             for i, ch in enumerate(self.channel_names):
                 image_path_ch = f"{base_path}_w{i+1}{ch}.TIF"
-                self._images[i] = tf.imread(image_path_ch)
+                self._images[sorted_ch[i]] = tf.imread(image_path_ch)
 
             z, y, x = self._images[0].shape
             assert z == self._shape_z
