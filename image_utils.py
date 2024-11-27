@@ -208,10 +208,17 @@ class NDImage(Image):
             else:
                 sorted_ch = range(len(self.channel_names))
 
+            print("loading ", self.channel_names, sorted_ch)
+
             base_path = os.path.splitext(image_path)[0]
-            for i, ch in enumerate(self.channel_names):
-                image_path_ch = f"{base_path}_w{i+1}{ch}.TIF"
-                self._images[sorted_ch[i]] = tf.imread(image_path_ch)
+            for i, ch in enumerate(sorted_ch):
+                image_path_ch = f"{base_path}_w{ch+1}{self.channel_names[ch]}.TIF"
+                try:
+                    self._images[i] = tf.imread(image_path_ch)
+                except ValueError:
+                    # See if it saved the space in channel name with an underscore
+                    image_path_ch = f"{base_path}_w{ch+1}{self.channel_names[ch].replace(" ", "_")}.TIF"
+                    self._images[i] = tf.imread(image_path_ch)
 
             z, y, x = self._images[0].shape
             assert z == self._shape_z
