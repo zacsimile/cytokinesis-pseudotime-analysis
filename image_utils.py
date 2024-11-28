@@ -215,7 +215,7 @@ class NDImage(Image):
                 image_path_ch = f"{base_path}_w{ch+1}{self.channel_names[ch]}.TIF"
                 try:
                     self._images[i] = tf.imread(image_path_ch)
-                except ValueError:
+                except FileNotFoundError:
                     # See if it saved the space in channel name with an underscore
                     image_path_ch = f"{base_path}_w{ch+1}{self.channel_names[ch].replace(' ', '_')}.TIF"
                     self._images[i] = tf.imread(image_path_ch)
