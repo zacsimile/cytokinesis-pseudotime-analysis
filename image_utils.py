@@ -106,23 +106,22 @@ def extract_channel_targets_from_filename(fn, wvls=[488, 568, 647], return_binne
     """
     binned_wvl = []
     chs_dict = {}
-    for el in fn.split('_'):
-        for wvl in wvls:
-            if isinstance(wvl, list):
-                for w in wvl:
-                    if str(w) in el:
-                        # choose wvl[0] as the bin
-                        if wvl[0] not in binned_wvl:
-                            binned_wvl.append(wvl[0])
-                        target = el.split(str(w))[0][:-1]
-                        chs_dict[str(wvl[0])] = target
-                        break
-            else:
-                if str(wvl) in el:
-                    if wvl not in binned_wvl:
-                        binned_wvl.append(wvl)
-                    target = el.split(str(wvl))[0][:-1]
-                    chs_dict[str(wvl)] = target
+    for wvl in wvls:
+        if isinstance(wvl, list):
+            for w in wvl:
+                if str(w) in fn:
+                    # choose wvl[0] as the bin
+                    if wvl[0] not in binned_wvl:
+                        binned_wvl.append(wvl[0])
+                    target = fn[:(fn.index(str(w))-1)].split('_')[-1]
+                    chs_dict[str(wvl[0])] = target
+                    # break
+        else:
+            if str(wvl) in fn:
+                if wvl not in binned_wvl:
+                    binned_wvl.append(wvl)
+                target = fn[:(fn.index(str(wvl))-1)].split('_')[-1]
+                chs_dict[str(wvl)] = target
 
     if return_binned:
         return chs_dict, binned_wvl
