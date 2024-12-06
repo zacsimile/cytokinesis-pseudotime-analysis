@@ -24,21 +24,24 @@ def pad_rot_and_trans_im(im, angle, x, y, N=2048):
     """
     if np.any([N < x for x in im.shape]):
         raise Exception("Padding is smaller than image size. Increase N.")
-    if len(im.shape) != 3:
-        raise Exception("This only works for images of dimension 3. TODO: Extend.")
+    if len(im.shape) != 3 and len(im.shape) != 4:
+        raise Exception("This only works for images of dimension 3 or 4. TODO: Extend.")
 
     # Pad the image
-    im_pad = np.zeros((im.shape[0],N,N), dtype=im.dtype)
-    x_off, y_off = (N-im.shape[1])//2, (N-im.shape[2])//2
-    im_pad[:,x_off:(x_off+im.shape[1]),y_off:(y_off+im.shape[2])] = im
+    if len(im.shape) == 3:
+        im_pad = np.zeros((im.shape[0],N,N), dtype=im.dtype)
+    elif len(im.shape) == 4:
+        im_pad = np.zeros((im.shape[0],im.shape[1],N,N), dtype=im.dtype)
+    x_off, y_off = (N-im.shape[-2])//2, (N-im.shape[-1])//2
+    im_pad[...,x_off:(x_off+im.shape[-2]),y_off:(y_off+im.shape[-1])] = im
 
     # Now translate
-    x_shift = int(im.shape[1]//2-y)
-    y_shift = int(im.shape[2]//2-x)
-    im_trans = np.roll(np.roll(im_pad, x_shift, axis=1), y_shift, axis=2)
+    x_shift = int(im.shape[-2]//2-y)
+    y_shift = int(im.shape[-1]//2-x)
+    im_trans = np.roll(np.roll(im_pad, x_shift, axis=-2), y_shift, axis=-1)
 
     # And rotate
-    im_rot = ndi.rotate(im_trans, -angle, axes=(2,1), reshape=False)
+    im_rot = ndi.rotate(im_trans, -angle, axes=(-1,-2), reshape=False)
 
     return im_rot
 
@@ -207,7 +210,7 @@ class NDImage(Image):
             else:
                 sorted_ch = range(len(self.channel_names))
 
-            print("loading ", self.channel_names, sorted_ch)
+            print("  loading ", self.channel_names, sorted_ch)
 
             base_path = os.path.splitext(image_path)[0]
             for i, ch in enumerate(sorted_ch):

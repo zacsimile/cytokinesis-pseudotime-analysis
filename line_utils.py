@@ -319,8 +319,11 @@ def fit_gaussian_fwhm(profile, p0=None, return_dict=False):
     if p0 is None:
         p0 = [np.max(profile), len(profile)/2, 3, np.min(profile)]  # A, mu, sig, b
     
+    bounds = ([0,0,0,0], [np.inf, np.inf, len(profile), np.inf])
+    
     res_lsq = optimize.least_squares(shape_res, 
                                      p0, 
+                                     bounds=bounds,
                                      args=(gauss, np.arange(profile.shape[0]), profile))
     
     fwhm = 2.3548200450309493*res_lsq.x[2]
