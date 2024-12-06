@@ -319,7 +319,7 @@ def fit_gaussian_fwhm(profile, p0=None, return_dict=False):
     if p0 is None:
         p0 = [np.max(profile), len(profile)/2, 3, np.min(profile)]  # A, mu, sig, b
     
-    bounds = ([0,0,0,0], [np.inf, np.inf, len(profile), np.inf])
+    bounds = ([0,0,0,0], [np.inf, len(profile), np.inf, np.inf])
     
     res_lsq = optimize.least_squares(shape_res, 
                                      p0, 
