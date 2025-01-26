@@ -1,10 +1,19 @@
 import os
+import logging
 
 import numpy as np
 import scipy.ndimage as ndi
 import tifffile as tf
 
 import math_utils
+
+logger = logging.getLogger('pseudotime')
+# logging.basicConfig(
+#     filename='pseudotime_run.log',
+#     format='%(asctime)s %(levelname)-8s %(message)s',
+#     level=logging.DEBUG,
+#     datefmt='%Y-%m-%d %H:%M:%S')
+# logger.addHandler(logging.StreamHandler())
 
 DEG_TO_RAD = np.pi / 180.0
 
@@ -197,7 +206,7 @@ def get_channel_orders(fn, wvls, n_ch, targets, desired_channel_order):
             except ValueError:
                 pass
     assert len(channel_order) == n_ch #len(desired_channel_order)
-    print(f"  channel_targets: {channel_targets} channel_order: {channel_order} group_channel_order: {group_channel_order}")
+    logger.debug(f"  channel_targets: {channel_targets} channel_order: {channel_order} group_channel_order: {group_channel_order}")
 
     return channel_order, group_channel_order, mt_channel
 
@@ -292,7 +301,7 @@ class NDImage(Image):
             else:
                 sorted_ch = range(len(self.channel_names))
 
-            print("  loading ", self.channel_names, sorted_ch)
+            logger.debug(f"  loading  {self.channel_names} {sorted_ch}")
 
             base_path = os.path.splitext(image_path)[0]
             for i, ch in enumerate(sorted_ch):
