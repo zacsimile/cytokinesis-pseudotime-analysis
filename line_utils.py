@@ -448,7 +448,7 @@ def rescale_inds(n, ll, ul):
     xnew = (xx - xx[ll])/(xx[ul]-xx[ll])
     return xnew
 
-def find_central_pos(im, xl, xu=None, zl=None, zu=None, ch=0):
+def find_central_pos(im, xl, xu=None, zl=None, zu=None, ch=0, linewidth=25):
     """
     Draw a line profile and fit the channel ch to a Gaussian. Return the mean
     of the Gaussian.
@@ -467,6 +467,8 @@ def find_central_pos(im, xl, xu=None, zl=None, zu=None, ch=0):
         Coordinate of second axis
     ch : int
         Channel to use for fitting
+    linewidth : int
+        Width of the scan, perpendicular to the line
 
     Returns
     -------
@@ -483,7 +485,7 @@ def find_central_pos(im, xl, xu=None, zl=None, zu=None, ch=0):
     chs = measure.profile_line(im.T, 
                               [xl, zu], 
                               [xu, zl], 
-                              linewidth=25)
+                              linewidth=linewidth)
     _, res_lsq_mt = fit_gaussian_fwhm(chs[...,ch], return_dict=True)
     z_coord = res_lsq_mt.x[1]
 
