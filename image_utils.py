@@ -6,7 +6,12 @@ import tifffile as tf
 
 import math_utils
 
-def pad_rot_and_trans_im(im, angle, x, y, N=2048):
+DEG_TO_RAD = np.pi / 180.0
+
+# Store already-calculated coordinates
+CACHED_IMAGE_CYLINDRICAL_COORDS = {}
+
+def pad_rot_and_trans_im(im, angle, x, y, N=2048, crop_length=None):
     """
     Pad, rotate and translate an image based on passed sizes, angles and positions.
 
@@ -40,8 +45,14 @@ def pad_rot_and_trans_im(im, angle, x, y, N=2048):
     y_shift = int(im.shape[-1]//2-x)
     im_trans = np.roll(np.roll(im_pad, x_shift, axis=-2), y_shift, axis=-1)
 
+    # If crop_length is provided, crop to this
+    if crop_length is not None:
+        crop_length2 = crop_length // 2
+        xc, yc = im_trans.shape[-1]//2, im_trans.shape[-2]//2
+        im_trans = im_trans[...,(yc-crop_length2):(yc+crop_length2),(xc-crop_length2):(xc+crop_length2)]
+
     # And rotate
-    im_rot = ndi.rotate(im_trans, -angle, axes=(-1,-2), reshape=False)
+    im_rot = ndi.rotate(im_trans, -angle, axes=(-1,-2), reshape=False, order=0)
 
     return im_rot
 
@@ -77,15 +88,25 @@ def image_cylindrical_coordinates(im, xc, yc, zc, ang_xy, dx=1, dy=1, dz=1):
     else:
         shape = im.shape
 
-    Z, Y, X = np.meshgrid(*[range(n) for n in shape], indexing='ij')
-    Z, Y, X = dz*(Z - zc), dy*(Y - yc), dx*(X - xc)  # center
+    # Unique key for coordinates that match this case
+    cache_key = f"{'_'.join([str(x) for x in shape])}_{xc}_{yc}_{zc}_{ang_xy}_{dx}_{dy}_{dz}"
 
-    ang = ang_xy*np.pi/180  # convert to radians
+    try:
+        r, theta, z = CACHED_IMAGE_CYLINDRICAL_COORDS[cache_key]
+    except KeyError:
+        Z, Y, X = np.meshgrid(*[range(n) for n in shape], indexing='ij')
+        Z, Y, X = dz*(Z - zc), dy*(Y - yc), dx*(X - xc)  # center
 
-    # establish cylindrical coordinate space along line 
-    r, theta, z = math_utils.cart2cyl(Z, 
-                                      X*np.sin(ang)+Y*np.cos(ang), 
-                                      X*np.cos(ang)-Y*np.sin(ang))
+        ang = ang_xy*DEG_TO_RAD  # convert to radians
+        sin_ang, cos_ang = np.sin(ang), np.cos(ang)
+
+        # establish cylindrical coordinate space along line 
+        r, theta, z = math_utils.cart2cyl(Z, 
+                                        X*sin_ang+Y*cos_ang, 
+                                        X*cos_ang-Y*sin_ang)
+        
+        # Store for later
+        CACHED_IMAGE_CYLINDRICAL_COORDS[cache_key] = (r, theta, z)
 
     return r, theta, z
 
@@ -130,6 +151,67 @@ def extract_channel_targets_from_filename(fn, wvls=[488, 568, 647], return_binne
         return chs_dict, binned_wvl
 
     return chs_dict
+
+def target_names(targets, key):
+    """ 
+    Construct a list of the key name plus any aliases. Important for searching
+    through file names.
+    """
+    try:
+        target = targets[key]
+    except KeyError:
+        return []
+    names = [key]
+    try:
+        names.extend(target["alias"])
+    except KeyError:
+        pass
+    return names
+
+def get_channel_orders(fn, wvls, n_ch, targets, desired_channel_order):
+    """
+    Get the sorting from the image to the 
+    """
+
+    # find wavelengths in file name and sort from high to low
+    wvls_dict, binned_wvls = extract_channel_targets_from_filename(fn, wvls=wvls)
+
+    # Establish target names in this data set and sort from high to low to match image load
+    channel_targets = [wvls_dict[str(wvl)] for wvl in sorted(binned_wvls)[::-1]]
+
+    # the last channel is always DAPI, if unknown
+    if len(channel_targets) < n_ch:
+        channel_targets.append("DAPI") 
+
+    # Now find the resorting of the channels according to their target position
+    channel_order = []
+    group_channel_order = []
+    mt_channel = 0
+    for j, ch in enumerate(desired_channel_order):
+        for opt in target_names(targets, ch):
+            try:
+                channel_order.append(channel_targets.index(opt))
+                group_channel_order.append(j)
+                if ch == "MTs":
+                    mt_channel = channel_targets.index(opt)
+            except ValueError:
+                pass
+    assert len(channel_order) == n_ch #len(desired_channel_order)
+    print(f"  channel_targets: {channel_targets} channel_order: {channel_order} group_channel_order: {group_channel_order}")
+
+    return channel_order, group_channel_order, mt_channel
+
+def radial_projection(im, nbins, bin_size, x, y, angle, z_coord, dx=0.09, dy=0.09, dz=1):
+    r, _, _ = image_cylindrical_coordinates(im, x, y, z_coord, angle, dx=dx, dy=dy, dz=dz)
+    # bin_size = min(min(dx, dy), dz) #r.max()/nbins
+    rbins = np.arange(nbins+1) * bin_size
+
+    proj = np.zeros((im.shape[0], nbins, im.shape[-1]), dtype=im.dtype)
+
+    for i in range(nbins):
+        proj[:,i,:] = (im*((r>=rbins[i])&(r<rbins[i+1]))[None,...]).sum(-3).sum(-2)
+
+    return proj
 
 class Image:
     def __init__(self, image_path, dc=1, dz=1, dy=1, dx=1):
