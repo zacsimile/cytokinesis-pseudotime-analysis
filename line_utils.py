@@ -1,3 +1,5 @@
+import logging
+
 import numpy as np
 import pandas as pd
 import skimage.measure as measure 
@@ -6,6 +8,8 @@ import scipy.optimize as optimize
 import scipy.signal as signal
 
 import image_utils
+
+logger = logging.getLogger('pseudotime')
 
 # ------------------------------ Line profile loading ------------------------------ #
 
@@ -317,15 +321,20 @@ def fit_tubule_diameter(profile, p0=None, return_dict=False):
 
 def fit_gaussian_fwhm(profile, p0=None, return_dict=False):
     if p0 is None:
-        p0 = [np.max(profile), len(profile)/2, 3, np.min(profile)]  # A, mu, sig, b
+        # p0 = [np.mean(profile), len(profile)/2, 3, np.min(profile)]  # A, mu, sig, b
+        p0 = [np.max(profile)/(1*np.sqrt(2*np.pi)), np.argmax(profile), 1, np.min(profile)]  # A, mu, sig, b
     
     bounds = ([0,0,0,0], [np.inf, len(profile), np.inf, np.inf])
+
+    logger.debug(f"  profile shape: {profile.shape}")
     
+    logger.debug(f"  p0: {p0}")
     res_lsq = optimize.least_squares(shape_res, 
                                      p0, 
                                      bounds=bounds,
                                      args=(gauss, np.arange(profile.shape[0]), profile))
     
+    logger.debug(f"  res_lsq.x: {res_lsq.x}")
     fwhm = 2.3548200450309493*res_lsq.x[2]
 
     if return_dict:
@@ -475,6 +484,7 @@ def find_central_pos(im, xl, xu=None, zl=None, zu=None, ch=0, linewidth=25):
     z_coord : float
         Central position of the fit object.
     """
+    import matplotlib.pyplot as plt
     if xu is None:
         xu = xl
     if zl is None:
@@ -483,10 +493,14 @@ def find_central_pos(im, xl, xu=None, zl=None, zu=None, ch=0, linewidth=25):
         zu = im.shape[1]-1
 
     chs = measure.profile_line(im.T, 
-                              [xl, zu], 
-                              [xu, zl], 
+                              [xl, zl], 
+                              [xu, zu], 
                               linewidth=linewidth)
+    # fig, ax = plt.subplots(1,1)
+    # xx = np.arange(len(chs[...,ch]))
+    # ax.plot(xx,chs[...,ch])
     _, res_lsq_mt = fit_gaussian_fwhm(chs[...,ch], return_dict=True)
+    # ax.plot(gauss(xx,*res_lsq_mt.x))
     z_coord = res_lsq_mt.x[1]
 
     return z_coord
