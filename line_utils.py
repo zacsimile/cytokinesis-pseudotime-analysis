@@ -300,14 +300,17 @@ def fit_tubule_diameter(profile, p0=None, return_dict=False):
         # r_outer = ((np.diff(np.flatnonzero(profile>np.mean(profile))[[0,-1]]))/2)[0]
         p0 = [
                 np.max(profile), 
-                len(profile)/2, 3, 
+                len(profile)/2, 1, 
                 np.min(profile), 
                 r_outer, 
                 max(0.95*r_outer,r_outer-20),
             ]  # [A, mu, sig, b, r_outer, r_inner]
+        
+    bounds = ([0,0,0,0,0,0], [np.inf, len(profile), np.inf, np.inf, np.inf, np.inf])
     
     res_lsq = optimize.least_squares(shape_res, 
                                     p0, 
+                                    bounds = bounds,
                                     args=(gauss_convolved_annulus_approx, 
                                         np.arange(profile.shape[0]), 
                                         profile))

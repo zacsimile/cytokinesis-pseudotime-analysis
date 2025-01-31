@@ -7,7 +7,7 @@ from functools import reduce
 
 logger = logging.getLogger('pseudotime')
 
-def load_workbooks(targets, desired_channel_order):
+def load_workbooks(targets, desired_channel_order=None):
     """
     Parameters
     ----------
@@ -17,10 +17,13 @@ def load_workbooks(targets, desired_channel_order):
     # Load the table of contents
     dfs = []
     for k, v in targets.items():
-        if k not in desired_channel_order:
+        if (desired_channel_order is not None) and (k not in desired_channel_order):
             continue
         try:
-            df = pd.read_excel(v['workbook'], sheet_name=v['workbook_sheet_name'], header=v['workbook_header_row'])
+            df = pd.read_excel(v['workbook'], 
+                               sheet_name=v['workbook_sheet_name'], 
+                               header=v['workbook_header_row'], 
+                               engine="openpyxl")
             df["target"] = k
             dfs.append(df)
         except KeyError:
@@ -45,7 +48,7 @@ def load_workbooks(targets, desired_channel_order):
         pass
 
     # Drop unused columns
-    metrics = metrics.dropna(axis=1)
+    # metrics = metrics.dropna(axis=1)
 
     # Now let's find the original images...
     for group in metrics.groupby("target"):

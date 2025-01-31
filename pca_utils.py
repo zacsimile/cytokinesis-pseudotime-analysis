@@ -120,6 +120,6 @@ def sort_by_point_plane_dist(xx, yy, fit, nbins=None):
     
     # Rebin as needed
     if nbins is not None:
-        permutation = np.split(permutation, nbins)
+        permutation = np.array_split(permutation, nbins)
     
     return permutation
