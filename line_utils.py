@@ -487,7 +487,7 @@ def find_central_pos(im, xl, xu=None, zl=None, zu=None, ch=0, linewidth=25):
     z_coord : float
         Central position of the fit object.
     """
-    import matplotlib.pyplot as plt
+    # import matplotlib.pyplot as plt
     if xu is None:
         xu = xl
     if zl is None:
