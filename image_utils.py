@@ -218,7 +218,8 @@ def radial_projection(im, nbins, bin_size, x, y, angle, z_coord, dx=0.09, dy=0.0
     proj = np.zeros((im.shape[0], nbins, im.shape[-1]), dtype=im.dtype)
 
     for i in range(nbins):
-        proj[:,i,:] = (im*((r>=rbins[i])&(r<rbins[i+1]))[None,...]).sum(-3).sum(-2)
+        mask = ((r>=rbins[i])&(r<rbins[i+1]))
+        proj[:,i,:] = (im*mask[None,...]).sum(-3).sum(-2)/mask.sum(-3).sum(-2)
 
     return proj
 
