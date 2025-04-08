@@ -334,3 +334,7 @@ class NDImage(Image):
     
         return np.stack(new_stack, axis=0)
     
+    @property
+    def dtype(self):
+        return self._images[0].dtype
+    
