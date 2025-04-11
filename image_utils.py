@@ -18,7 +18,7 @@ logger = logging.getLogger('pseudotime')
 DEG_TO_RAD = np.pi / 180.0
 
 # Store already-calculated coordinates
-CACHED_IMAGE_CYLINDRICAL_COORDS = {}
+# CACHED_IMAGE_CYLINDRICAL_COORDS = {}
 
 def pad_rot_and_trans_im(im, angle, x, y, N=2048, crop_length=None):
     """
@@ -62,7 +62,7 @@ def pad_rot_and_trans_im(im, angle, x, y, N=2048, crop_length=None):
 
     # And rotate
     im_rot = ndi.rotate(im_trans, -angle, axes=(-1,-2), reshape=False, order=0)
-
+    
     return im_rot
 
 def normalize_image(im):
@@ -98,24 +98,24 @@ def image_cylindrical_coordinates(im, xc, yc, zc, ang_xy, dx=1, dy=1, dz=1):
         shape = im.shape
 
     # Unique key for coordinates that match this case
-    cache_key = f"{'_'.join([str(x) for x in shape])}_{xc}_{yc}_{zc}_{ang_xy}_{dx}_{dy}_{dz}"
+    # cache_key = f"{'_'.join([str(x) for x in shape])}_{xc}_{yc}_{zc}_{ang_xy}_{dx}_{dy}_{dz}"
 
-    try:
-        r, theta, z = CACHED_IMAGE_CYLINDRICAL_COORDS[cache_key]
-    except KeyError:
-        Z, Y, X = np.meshgrid(*[range(n) for n in shape], indexing='ij')
-        Z, Y, X = dz*(Z - zc), dy*(Y - yc), dx*(X - xc)  # center
+    # try:
+    #     r, theta, z = CACHED_IMAGE_CYLINDRICAL_COORDS[cache_key]
+    # except KeyError:
+    Z, Y, X = np.meshgrid(*[range(n) for n in shape], indexing='ij')
+    Z, Y, X = dz*(Z - zc), dy*(Y - yc), dx*(X - xc)  # center
 
-        ang = ang_xy*DEG_TO_RAD  # convert to radians
-        sin_ang, cos_ang = np.sin(ang), np.cos(ang)
+    ang = ang_xy*DEG_TO_RAD  # convert to radians
+    sin_ang, cos_ang = np.sin(ang), np.cos(ang)
 
-        # establish cylindrical coordinate space along line 
-        r, theta, z = math_utils.cart2cyl(Z, 
-                                        X*sin_ang+Y*cos_ang, 
-                                        X*cos_ang-Y*sin_ang)
-        
+    # establish cylindrical coordinate space along line 
+    r, theta, z = math_utils.cart2cyl(Z, 
+                                    X*sin_ang+Y*cos_ang, 
+                                    X*cos_ang-Y*sin_ang)
+    
         # Store for later
-        CACHED_IMAGE_CYLINDRICAL_COORDS[cache_key] = (r, theta, z)
+        # CACHED_IMAGE_CYLINDRICAL_COORDS[cache_key] = (r, theta, z)
 
     return r, theta, z
 
