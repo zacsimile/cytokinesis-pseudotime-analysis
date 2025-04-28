@@ -31,36 +31,39 @@ targets["septin"] = {"alias": ["GFP"]}
 
 targets["DAPI"] = {}
 
-targets["MKLP1"] = {
-    "workbook": r"H:\01_Macros_Analysis\20241125_MKLP1_along_2024_only.xlsx",
-    "workbook_sheet_name": "ToC",
-    "workbook_header_row": 4,
-    "image_directory": r"H:\MKLP1",
-}
+
 
 targets["RacGAP1"] = {
-    "workbook": r"H:\01_Macros_Analysis\RacGAP1_along.xlsx",
+    "workbook": r"D:\Nadja Expansion Analysis\InstructionFiles\Raw Data\RAWDATA\20250110_RacGAP1_along.xlsx",
     "workbook_sheet_name": "ToC",
     "workbook_header_row": 16,
     "image_directory": r"H:\RacGAP1",
 }
 
+targets["MKLP1"] = {
+    "workbook": r"D:\Nadja Expansion Analysis\InstructionFiles\Raw Data\RAWDATA\20250110_MKLP1_along_2024_only.xlsx",
+    "workbook_sheet_name": "ToC",
+    "workbook_header_row": 4,
+    "image_directory": r"H:\MKLP1",
+}
+
+
 targets["anillin"] = {
-    "workbook": r"H:\01_Macros_Analysis\20250110_anillin_along_2024_only.xlsx",
+    "workbook": r"D:\Nadja Expansion Analysis\InstructionFiles\Raw Data\RAWDATA\20250110_anillin_along_2024_only.xlsx",
     "workbook_sheet_name": "ToC",
     "workbook_header_row": 2,
     "image_directory": r"H:\Anillin",
 }
 
 targets["myoIIA"] = {
-    "workbook": r"H:\01_Macros_Analysis\20241111_myosinIIA_along.xlsx",
+    "workbook": r"D:\Nadja Expansion Analysis\InstructionFiles\Raw Data\RAWDATA\20250114_myosinIIA_along.xlsx",
     "workbook_sheet_name": "ToC",
     "workbook_header_row": 0,
     "image_directory": r"H:\Myosin IIA",
 }
 
 targets["myoIIB"] = {
-    "workbook": r"H:\01_Macros_Analysis\20241107_myoIIB_along.xlsx",
+    "workbook": r"D:\Nadja Expansion Analysis\InstructionFiles\Raw Data\RAWDATA\20250110_myoIIB_along.xlsx",
     "workbook_sheet_name": "ToC",
     "workbook_header_row": 1,
     "image_directory":  r"H:\Myosin IIB",
@@ -68,77 +71,78 @@ targets["myoIIB"] = {
 }
 
 targets["Cit-K"] = {
-    "workbook": r"H:\01_Macros_Analysis\20241017_CitK_along.xlsx",
+    "workbook": r"D:\Nadja Expansion Analysis\InstructionFiles\Raw Data\RAWDATA\20250110_CitK_along.xlsx",
     "workbook_sheet_name": "ToC",
     "workbook_header_row": 4,
     "image_directory":  r"H:\Citron Kinase",
 }
 
 targets["CellMask"] = {
-    "workbook": r"H:\01_Macros_Analysis\20241125_CellMasko_2024_only.xlsx",
+    "workbook": r"D:\Nadja Expansion Analysis\InstructionFiles\Raw Data\RAWDATA\20250114_CellMasko_2024_only.xlsx",
     "workbook_sheet_name": "ToC",
     "workbook_header_row": 1,
     "image_directory":  r"H:\CellMask Membrane",
 }
 
 targets["PRC1"] = {
-   "workbook": r"H:\01_Macros_Analysis\PRC1_along.xlsx",
+   "workbook": r"D:\Nadja Expansion Analysis\InstructionFiles\Raw Data\RAWDATA\20250110_PRC1_along.xlsx",
     "workbook_sheet_name": "ToC",
     "workbook_header_row": 1,
     "image_directory":  r"H:\PRC1",
 }
 
 targets["actin"] = {
-    "workbook": r"H:\01_Macros_Analysis\20241125_Actin_profile.xlsx",
+    "workbook": r"D:\Nadja Expansion Analysis\InstructionFiles\Raw Data\RAWDATA\20250114_Actin_profile.xlsx",
     "workbook_sheet_name": "ToC",
     "workbook_header_row": 1,
     "image_directory":  r"H:\Actin",
 }
 
 targets ["Septin7"] = {
-    "workbook": r"H:\01_Macros_Analysis\20241125_Septin7_profileline.xlsx",
+    "workbook": r"D:\Nadja Expansion Analysis\InstructionFiles\Raw Data\RAWDATA\20250114_Septin7_profileline.xlsx",
     "workbook_sheet_name": "ToC",
     "workbook_header_row": 0,
     "image_directory": r"H:\Septin7",
 }
 
 targets ["Septin11"] = {
-    "workbook": r"H:\01_Macros_Analysis\20241125_Septin11_profileline.xlsx",
+    "workbook": r"D:\Nadja Expansion Analysis\InstructionFiles\Raw Data\RAWDATA\20250114_Septin11_profileline.xlsx",
     "workbook_sheet_name": "ToC",
     "workbook_header_row": 0,
     "image_directory": r"H:\Septin11",
 }
 
 targets ["Septin9"] = {
-    "workbook": r"H:\01_Macros_Analysis\20241125_Septin9_profileline.xlsx",
+    "workbook": r"D:\Nadja Expansion Analysis\InstructionFiles\Raw Data\RAWDATA\20250114_Septin9_profileline.xlsx",
     "workbook_sheet_name": "ToC",
     "workbook_header_row": 0,
     "image_directory": r"H:\Septin9 Novus Bio",
 }
 
 targets ["BORG4"] = {
-    "workbook": r"H:\01_Macros_Analysis\20250114_BORG4_profileline.xlsx",
+    "workbook": r"D:\Nadja Expansion Analysis\InstructionFiles\Raw Data\RAWDATA\20250114_BORG4_profileline.xlsx",
     "workbook_sheet_name": "ToC",
     "workbook_header_row": 0,
     "image_directory": r"H:\BORG4",
 }
 
+
 targets ["IST1"] = {
-    "workbook": r"H:\01_Macros_Analysis\20241126_IST1.xlsx",
+    "workbook": r"D:\Nadja Expansion Analysis\InstructionFiles\Raw Data\RAWDATA\20250203_IST1.xlsx",
     "workbook_sheet_name": "ToC",
     "workbook_header_row": 1,
     "image_directory": r"H:\IST1",
 }
 
 targets ["CHMP4B"] = {
-    "workbook": r"H:\01_Macros_Analysis\20241127_CHMP4B.xlsx",
+    "workbook": r"D:\Nadja Expansion Analysis\InstructionFiles\Raw Data\RAWDATA\20250203_CHMP4B.xlsx",
     "workbook_sheet_name": "ToC",
     "workbook_header_row": 0,
     "image_directory": r"H:\CHMP4B",
 }
 
 targets ["ALIXrb"] = {
-    "workbook": r"H:\01_Macros_Analysis\20241128_ALIXrb.xlsx",
+    "workbook": r"D:\Nadja Expansion Analysis\InstructionFiles\Raw Data\RAWDATA\20250114_ALIXrb.xlsx",
    "workbook_sheet_name": "ToC",
     "workbook_header_row": 0,
     "image_directory": r"H:\ALIX rb",
@@ -146,14 +150,14 @@ targets ["ALIXrb"] = {
 }
 
 targets ["ALIXm"] = {
-    "workbook": r"H:\01_Macros_Analysis\20241128_ALIXm.xlsx",
+    "workbook": r"D:\Nadja Expansion Analysis\InstructionFiles\Raw Data\RAWDATA\20250114_ALIXm.xlsx",
     "workbook_sheet_name": "Tabelle1",
     "workbook_header_row": 0,
     "image_directory": r"H:\ALIX m", 
 }
 
 targets ["Tsg101-ab83m"] = {
-    "workbook": r"H:\01_Macros_Analysis\20241128_Tsg101_ab83.xlsx",
+    "workbook": r"D:\Nadja Expansion Analysis\InstructionFiles\Raw Data\RAWDATA\20250114_Tsg101_ab83.xlsx",
     "workbook_sheet_name": "ToC",
     "workbook_header_row": 1,
     "image_directory": r"H:\TSG101 ab83",
@@ -161,22 +165,25 @@ targets ["Tsg101-ab83m"] = {
 }
 
 targets ["Tsg101"] = {
-    "workbook": r"H:\01_Macros_Analysis\20241129_Tsg101.xlsx",
+    "workbook": r"D:\Nadja Expansion Analysis\InstructionFiles\Raw Data\RAWDATA\20250114_Tsg101.xlsx",
     "workbook_sheet_name": "ToC",
     "workbook_header_row": 0,
     "image_directory": r"H:\Tsg101",
     
 }
 
+
 # Order of stages
 time_key = "Stage"
 # time_order = ["CF", "RC", "CS", "RS", "SM", "BA", "A"]
+time_order = ["RC", "CS", "RS", "SM", "BA", "A"]
 
-time_order = ["CF", "RC", "CS", "RS", "SM", "SM1", "SM2", "SM3", "BA", "BA1", "BA2", "BA3", "BA4", "A"]
+
+# time_order = [ "RC", "CS", "RS", "SM0", "SM1", "SM2", "SM3", "BA0", "BA1", "BA2", "BA3", "BA4", "A"]
 
 # Don't fit the septin ring locations at these time points
 # Added CF here because I expect no septin peaks at the furrow
-time_do_not_fit = ["CF", "BA", "BA1", "BA2", "BA3", "BA4", "A"]
+time_do_not_fit = ["CF", "BA", "BA0", "BA1", "BA2", "BA3", "BA4", "A"]
 
 # Channels per image (TODO: Auto detect)
 n_ch = 4
@@ -190,7 +197,7 @@ wvls = [488,[568, "orange"],[646,647,657]]
 # must include MTs, septin and DAPI
 desired_channel_order = ["MTs", "septin", "DAPI", "CellMask", "MKLP1", "RacGAP1", "PRC1", "Cit-K", "anillin", "myoIIA", "myoIIB", "actin", "Septin7", "Septin11", "Septin9", "BORG4", "Tsg101", "Tsg101-ab83m", "ALIXrb", "ALIXm", "IST1", "CHMP4B"]
 # desired_channel_order = ["MTs", "septin", "DAPI", "CellMask", "MKLP1", "RacGAP1", "PRC1", "Cit-K", "anillin", "myoIIA", "myoIIB", "actin", "Septin7", "Septin11", "Septin9", "BORG4", "Tsg101", "ALIXrb", "ALIXm", "IST1", "CHMP4B"]
-desired_channel_order = ["MTs", "septin", "DAPI", "anillin"]#, "Cit-K", "PRC1"]
+# desired_channel_order = ["MTs", "septin", "DAPI", "IST1", "CHMP4B"]#, "Cit-K", "PRC1"]
 
 # desired_channel_order = ["MTs", "septin", "DAPI", "MKLP1", "RacGAP1", "anillin", "myoIIA", "myoIIB", "Cit-K", "CellMask", "PRC1", "actin"]
 # desired_channel_order = ["MTs", "septin", "DAPI", "MKLP1", "RacGAP1", "anillin", "myoIIA", "Cit-K", "CellMask", "PRC1", "actin"]
@@ -203,8 +210,8 @@ length = 500
 # Note: we can only do one at a time at the moment
 # mode = "mean-proj"
 # mode = "mean-proj-individual"
-# mode = "radial-proj"
-mode = "z-stack"
+mode = "radial-proj"
+# mode = "z-stack"
 
 # In the worst case (one tubule is sandwiched at the top of the stack and the other
 # at the bottom), this must be 2*<max stack length>-1 
