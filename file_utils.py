@@ -48,8 +48,8 @@ def load_workbooks(targets, desired_channel_order=None):
         pass
 
     # Drop unused columns
-    # metrics = metrics.dropna(axis=1)
-
+    metrics = metrics.dropna(how='all', axis=1)
+    
     # Now let's find the original images...
     for group in metrics.groupby("target"):
         name, entries = group
