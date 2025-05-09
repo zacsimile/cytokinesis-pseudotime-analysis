@@ -1,0 +1,112 @@
+ALIXm:
+  image_directory: /Volumes/Ries_Ewers/ALIX m
+  workbook: /Volumes/Ries_Ewers/01_Macros_Analysis/20250114_ALIXm.xlsx
+  workbook_header_row: 0
+  workbook_sheet_name: Tabelle1
+ALIXrb:
+  alias:
+  - ALIX
+  image_directory: /Volumes/Ries_Ewers/ALIX rb
+  workbook: /Volumes/Ries_Ewers/01_Macros_Analysis/20250114_ALIXrb.xlsx
+  workbook_header_row: 0
+  workbook_sheet_name: ToC
+BORG4:
+  image_directory: /Volumes/Ries_Ewers/BORG4
+  workbook: /Volumes/Ries_Ewers/01_Macros_Analysis/20250114_BORG4_profileline.xlsx
+  workbook_header_row: 0
+  workbook_sheet_name: ToC
+CHMP4B:
+  image_directory: /Volumes/Ries_Ewers/CHMP4B
+  workbook: /Volumes/Ries_Ewers/01_Macros_Analysis/20250203_CHMP4B.xlsx
+  workbook_header_row: 0
+  workbook_sheet_name: ToC
+CellMask:
+  image_directory: /Volumes/Ries_Ewers/CellMask Membrane
+  workbook: /Volumes/Ries_Ewers/01_Macros_Analysis/20250114_CellMasko_2024_only.xlsx
+  workbook_header_row: 1
+  workbook_sheet_name: ToC
+Cit-K:
+  image_directory: /Volumes/Ries_Ewers/Citron Kinase
+  workbook: /Volumes/Ries_Ewers/01_Macros_Analysis/20250110_CitK_along.xlsx
+  workbook_header_row: 4
+  workbook_sheet_name: ToC
+DAPI: {}
+IST1:
+  image_directory: /Volumes/Ries_Ewers/IST1
+  workbook: /Volumes/Ries_Ewers/01_Macros_Analysis/20250203_IST1.xlsx
+  workbook_header_row: 1
+  workbook_sheet_name: ToC
+MKLP1:
+  image_directory: /Volumes/Ries_Ewers/MKLP1
+  workbook: /Volumes/Ries_Ewers/01_Macros_Analysis/20250110_MKLP1_along_2024_only.xlsx
+  workbook_header_row: 4
+  workbook_sheet_name: ToC
+MTs:
+  alias:
+  - aTub
+  - a-tub
+  - atub
+  - tub
+  - tub-m
+  - tub-rt
+PRC1:
+  image_directory: /Volumes/Ries_Ewers/PRC1
+  workbook: /Volumes/Ries_Ewers/01_Macros_Analysis/20250110_PRC1_along.xlsx
+  workbook_header_row: 1
+  workbook_sheet_name: ToC
+RacGAP1:
+  image_directory: /Volumes/Ries_Ewers/RacGAP1
+  workbook: /Volumes/Ries_Ewers/01_Macros_Analysis/20250110_RacGAP1_along.xlsx
+  workbook_header_row: 16
+  workbook_sheet_name: ToC
+Septin11:
+  image_directory: /Volumes/Ries_Ewers/Septin11
+  workbook: /Volumes/Ries_Ewers/01_Macros_Analysis/20250114_Septin11_profileline.xlsx
+  workbook_header_row: 0
+  workbook_sheet_name: ToC
+Septin7:
+  image_directory: /Volumes/Ries_Ewers/Septin7
+  workbook: /Volumes/Ries_Ewers/01_Macros_Analysis/20250114_Septin7_profileline.xlsx
+  workbook_header_row: 0
+  workbook_sheet_name: ToC
+Septin9:
+  image_directory: /Volumes/Ries_Ewers/Septin9 Novus Bio
+  workbook: /Volumes/Ries_Ewers/01_Macros_Analysis/20250114_Septin9_profileline.xlsx
+  workbook_header_row: 0
+  workbook_sheet_name: ToC
+Tsg101:
+  image_directory: /Volumes/Ries_Ewers/Tsg101
+  workbook: /Volumes/Ries_Ewers/01_Macros_Analysis/20250114_Tsg101.xlsx
+  workbook_header_row: 0
+  workbook_sheet_name: ToC
+Tsg101-ab83m:
+  image_directory: /Volumes/Ries_Ewers/TSG101 ab83
+  workbook: /Volumes/Ries_Ewers/01_Macros_Analysis/20250114_Tsg101_ab83.xlsx
+  workbook_header_row: 1
+  workbook_sheet_name: ToC
+actin:
+  image_directory: /Volumes/Ries_Ewers/Actin
+  workbook: /Volumes/Ries_Ewers/01_Macros_Analysis/20250114_Actin_profile.xlsx
+  workbook_header_row: 1
+  workbook_sheet_name: ToC
+anillin:
+  image_directory: /Volumes/Ries_Ewers/Anillin
+  workbook: /Volumes/Ries_Ewers/01_Macros_Analysis/20250110_anillin_along_2024_only.xlsx
+  workbook_header_row: 2
+  workbook_sheet_name: ToC
+myoIIA:
+  image_directory: /Volumes/Ries_Ewers/Myosin IIA
+  workbook: /Volumes/Ries_Ewers/01_Macros_Analysis/20250114_myosinIIA_along.xlsx
+  workbook_header_row: 0
+  workbook_sheet_name: ToC
+myoIIB:
+  alias:
+  - mypoIIB
+  - myosinIIB
+  image_directory: /Volumes/Ries_Ewers/Myosin IIB
+  workbook: /Volumes/Ries_Ewers/01_Macros_Analysis/20250110_myoIIB_along.xlsx
+  workbook_header_row: 1
+  workbook_sheet_name: ToC
+septin:
+  alias:
+  - GFP

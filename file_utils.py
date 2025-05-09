@@ -2,6 +2,7 @@ import os
 import glob
 import logging
 
+import yaml
 import pandas as pd
 from functools import reduce
 
@@ -29,6 +30,7 @@ def load_workbooks(targets, desired_channel_order=None):
         except KeyError:
             pass
 
+    # TODO: Should "outer" be "left"?
     metrics = reduce(lambda  left,right: pd.merge(left, right, how='outer'), dfs)
 
     # Get rid of rows with no line specified
@@ -66,3 +68,8 @@ def load_workbooks(targets, desired_channel_order=None):
     metrics = metrics[~metrics['filename'].isna()]
 
     return metrics
+
+def load_targets(fn):
+    with open(fn, 'r') as fp:
+        data = yaml.load(fp, Loader=yaml.FullLoader)
+    return data

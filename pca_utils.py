@@ -95,7 +95,7 @@ def pca(features, n_components=2, transform=False, fit=False):
     return pca
 
 
-def sort_by_point_plane_dist(xx, yy, fit, nbins=None):
+def sort_by_point_plane_dist(xx, yy, fit, nbins=None, binning="equal-width"):
     """
 
     Sort features by point-plane distance from (xx,yy) to
@@ -107,6 +107,12 @@ def sort_by_point_plane_dist(xx, yy, fit, nbins=None):
         2D point locations to map onto line
     fit : np.typing.ArrayLike
         Poly as defined in np.polyfit 
+    nbins : int, optional
+        Number of bins to split the points into
+    binning : str
+        Option of equal-width, which splits the full range of targets
+        into nbins or equal-size, which guarantees each bin contains
+        the same number of points
 
     Returns
     -------
@@ -120,6 +126,15 @@ def sort_by_point_plane_dist(xx, yy, fit, nbins=None):
     
     # Rebin as needed
     if nbins is not None:
-        permutation = np.array_split(permutation, nbins)
+        if binning == "equal-size":
+            permutation = np.array_split(permutation, nbins)
+        elif binning == "equal-width":
+            minxp = np.min(xp)
+            bin_width = (np.max(xp)-minxp)/nbins
+            split_vals = minxp + np.arange(1,nbins)*bin_width
+            split_inds = np.argmax(xp[permutation][:,None]>split_vals[None,:],axis=0)
+            permutation = np.split(permutation, split_inds)
+        else:
+            raise UserWarning("Unknown binning {binning}. Not binning anything.")
     
     return permutation

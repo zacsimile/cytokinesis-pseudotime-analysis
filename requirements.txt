@@ -7,3 +7,4 @@ matplotlib
 tifffile==2024.9.20
 jupyterlab
 openpyxl
+pyyaml
