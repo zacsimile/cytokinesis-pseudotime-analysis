@@ -1,0 +1,115 @@
+
+
+
+ALIXm:
+  image_directory:  H:\ALIX m
+  workbook: D:\Nadja Expansion Analysis\InstructionFiles\PCA\20250114_ALIXm.xlsx
+  workbook_header_row: 0
+  workbook_sheet_name: ToC
+ALIXrb:
+  alias:
+  - ALIX
+  image_directory: H:\ALIX rb
+  workbook: D:\Nadja Expansion Analysis\InstructionFiles\PCA\20250114_ALIXrb.xlsx
+  workbook_header_row: 0
+  workbook_sheet_name: ToC
+BORG4:
+  image_directory: H:\BORG4
+  workbook: D:\Nadja Expansion Analysis\InstructionFiles\PCA\20250114_BORG4_profileline.xlsx
+  workbook_header_row: 0
+  workbook_sheet_name: ToC
+CHMP4B:
+  image_directory: H:\CHMP4B
+  workbook: D:\Nadja Expansion Analysis\InstructionFiles\PCA\20250203_CHMP4B.xlsx
+  workbook_header_row: 0
+  workbook_sheet_name: ToC
+CellMask:
+  image_directory: H:\CellMask Membrane
+  workbook: D:\Nadja Expansion Analysis\InstructionFiles\PCA\20250114_CellMasko_2024_only.xlsx
+  workbook_header_row: 1
+  workbook_sheet_name: ToC
+Cit-K:
+  image_directory: H:\Citron Kinase
+  workbook: D:\Nadja Expansion Analysis\InstructionFiles\PCA\20250110_CitK_along.xlsx
+  workbook_header_row: 4
+  workbook_sheet_name: ToC
+DAPI: {}
+IST1:
+  image_directory: H:\IST1
+  workbook: D:\Nadja Expansion Analysis\InstructionFiles\PCA\20250203_IST1.xlsx
+  workbook_header_row: 1
+  workbook_sheet_name: ToC
+MKLP1:
+  image_directory: H:\MKLP1
+  workbook: D:\Nadja Expansion Analysis\InstructionFiles\PCA\20250110_MKLP1_along_2024_only.xlsx
+  workbook_header_row: 4
+  workbook_sheet_name: ToC
+MTs:
+  alias:
+  - aTub
+  - a-tub
+  - atub
+  - tub
+  - tub-m
+  - tub-rt
+PRC1:
+  image_directory: H:\PRC1
+  workbook: D:\Nadja Expansion Analysis\InstructionFiles\PCA\20250110_PRC1_along.xlsx
+  workbook_header_row: 1
+  workbook_sheet_name: ToC
+RacGAP1:
+  image_directory: H:\RacGAP1
+  workbook: D:\Nadja Expansion Analysis\InstructionFiles\PCA\20250110_RacGAP1_along.xlsx
+  workbook_header_row: 16
+  workbook_sheet_name: ToC
+Septin11:
+  image_directory: H:\Septin11
+  workbook: D:\Nadja Expansion Analysis\InstructionFiles\PCA\20250114_Septin11_profileline.xlsx
+  workbook_header_row: 0
+  workbook_sheet_name: ToC
+Septin7:
+  image_directory: H:\Septin7
+  workbook: D:\Nadja Expansion Analysis\InstructionFiles\PCA\20250114_Septin7_profileline.xlsx
+  workbook_header_row: 0
+  workbook_sheet_name: ToC
+Septin9:
+  image_directory: H:\Septin9 Novus Bio
+  workbook: D:\Nadja Expansion Analysis\InstructionFiles\PCA\20250114_Septin9_profileline.xlsx
+  workbook_header_row: 0
+  workbook_sheet_name: ToC
+Tsg101:
+  image_directory: H:\Tsg101
+  workbook: D:\Nadja Expansion Analysis\InstructionFiles\PCA\20250114_Tsg101.xlsx
+  workbook_header_row: 0
+  workbook_sheet_name: ToC
+Tsg101-ab83m:
+  image_directory: H:\TSG101 ab83
+  workbook: D:\Nadja Expansion Analysis\InstructionFiles\PCA\20250114_Tsg101_ab83.xlsx
+  workbook_header_row: 1
+  workbook_sheet_name: ToC
+actin:
+  image_directory: H:\Actin
+  workbook: D:\Nadja Expansion Analysis\InstructionFiles\PCA\20250114_Actin_profile.xlsx
+  workbook_header_row: 1
+  workbook_sheet_name: ToC
+anillin:
+  image_directory: H:\Anillin
+  workbook: D:\Nadja Expansion Analysis\InstructionFiles\PCA\20250110_anillin_along_2024_only.xlsx
+  workbook_header_row: 2
+  workbook_sheet_name: ToC
+myoIIA:
+  image_directory: H:\Myosin IIA
+  workbook: D:\Nadja Expansion Analysis\InstructionFiles\PCA\20250114_myosinIIA_along.xlsx
+  workbook_header_row: 0
+  workbook_sheet_name: ToC
+myoIIB:
+  alias:
+  - mypoIIB
+  - myosinIIB
+  image_directory: H:\Myosin IIB
+  workbook: D:\Nadja Expansion Analysis\InstructionFiles\PCA\20250110_myoIIB_along.xlsx
+  workbook_header_row: 1
+  workbook_sheet_name: ToC
+septin:
+  alias:
+  - GFP
