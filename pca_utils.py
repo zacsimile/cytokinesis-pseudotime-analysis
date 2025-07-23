@@ -88,14 +88,14 @@ def pca(features, n_components=2, transform=False, fit=False):
     if transform:
         xx, yy = pca.transform(features).T[:2,:]
         if fit:
-            fit = np.polyfit(xx, yy, 3)
+            fit = np.polyfit(xx, yy, 4)
             return pca, (xx, yy), fit
         return pca, (xx, yy)
 
     return pca
 
 
-def sort_by_point_plane_dist(xx, yy, fit, nbins=None, binning="equal-width"):
+def sort_by_point_plane_dist(xx, yy, fit, nbins=None, binning="equal-width", overlap=0):
     """
 
     Sort features by point-plane distance from (xx,yy) to
@@ -113,6 +113,10 @@ def sort_by_point_plane_dist(xx, yy, fit, nbins=None, binning="equal-width"):
         Option of equal-width, which splits the full range of targets
         into nbins or equal-size, which guarantees each bin contains
         the same number of points
+    overlap : int or float
+        Overlap of the bins. HIGHLY IRREGULAR! Float representing fraction 
+        of bin size for equal-width, integer representing number of points 
+        in overlap for equal-size.
 
     Returns
     -------
@@ -127,13 +131,26 @@ def sort_by_point_plane_dist(xx, yy, fit, nbins=None, binning="equal-width"):
     # Rebin as needed
     if nbins is not None:
         if binning == "equal-size":
-            permutation = np.array_split(permutation, nbins)
+            # permutation = np.array_split(permutation, nbins)
+            bin_size = int(np.ceil(len(permutation) / nbins) + overlap)
+            step = bin_size - overlap
+            permutation = [permutation[i:(i+bin_size)] for i in range(0, len(permutation), step)]
         elif binning == "equal-width":
             minxp = np.min(xp)
             bin_width = (np.max(xp)-minxp)/nbins
-            split_vals = minxp + np.arange(1,nbins)*bin_width
-            split_inds = np.argmax(xp[permutation][:,None]>split_vals[None,:],axis=0)
-            permutation = np.split(permutation, split_inds)
+            step = bin_width*(1-overlap)
+            split_left = minxp + np.arange(0,nbins)*step
+            split_right = split_left + bin_width
+            split_left_inds = np.argmax(xp[permutation][:,None]>=split_left[None,:],axis=0)
+            split_right_inds = np.argmax(xp[permutation][:,None]>split_right[None,:],axis=0)
+            
+            # TODO: I shouldn't need to do this.
+            split_left_inds[0], split_right_inds[-1] = 0, len(xp)+1
+
+            permutation = [permutation[i:j] for i,j in zip(split_left_inds, split_right_inds)]
+            # split_vals = minxp + np.arange(1,nbins)*bin_width
+            # split_inds = np.argmax(xp[permutation][:,None]>split_vals[None,:],axis=0)
+            # permutation = np.split(permutation, split_inds)
         else:
             raise UserWarning("Unknown binning {binning}. Not binning anything.")
     
