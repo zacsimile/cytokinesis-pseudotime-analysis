@@ -79,7 +79,7 @@ def pca(features, n_components=2, transform=False, fit=False):
         PCA object
     """
     # z-norm features
-    features = (features - features.mean(0))/features.std(0)
+    features = (features - features.mean(0))/(features.std(0)+1e-12)
 
     # Compute PCA
     pca = PCA(n_components=n_components)
@@ -133,7 +133,7 @@ def sort_by_point_plane_dist(xx, yy, fit, nbins=None, binning="equal-width", ove
         if binning == "equal-size":
             # permutation = np.array_split(permutation, nbins)
             bin_size = int(np.ceil(len(permutation) / nbins) + overlap)
-            step = bin_size - overlap
+            step = int(bin_size - overlap)
             permutation = [permutation[i:(i+bin_size)] for i in range(0, len(permutation), step)]
         elif binning == "equal-width":
             minxp = np.min(xp)
