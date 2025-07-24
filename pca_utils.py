@@ -114,9 +114,7 @@ def sort_by_point_plane_dist(xx, yy, fit, nbins=None, binning="equal-width", ove
         into nbins or equal-size, which guarantees each bin contains
         the same number of points
     overlap : int or float
-        Overlap of the bins. HIGHLY IRREGULAR! Float representing fraction 
-        of bin size for equal-width, integer representing number of points 
-        in overlap for equal-size.
+        Overlap of the bins. Float representing fraction of bin size.
 
     Returns
     -------
@@ -132,6 +130,8 @@ def sort_by_point_plane_dist(xx, yy, fit, nbins=None, binning="equal-width", ove
     if nbins is not None:
         if binning == "equal-size":
             # permutation = np.array_split(permutation, nbins)
+            bin_size = int(np.ceil(len(permutation) / nbins))
+            overlap = int(np.round(overlap*bin_size))
             bin_size = int(np.ceil(len(permutation) / nbins) + overlap)
             step = int(bin_size - overlap)
             permutation = [permutation[i:(i+bin_size)] for i in range(0, len(permutation), step)]
