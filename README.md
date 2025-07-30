@@ -75,3 +75,7 @@ python looped_images_over_pseudotime.py
 ```
 
 ***looped_images_over_pseudotime.py*** - Performs the same function as `looped_images_over_pseudotime copy.ipynb`, but from a Python script.
+
+## Related repositories 
+
+The code to generate the table for the merged metrics option, which includes features extracted from Cellpose, can be found in the [cytokinesis-feature-analysis](https://github.com/AG-Ewers/cytokinesis-feature-analysis) repository.
