@@ -1,4 +1,4 @@
-# expansion-analysis
+# cytokinesis-pseudotime-analysis
 
 Split 3D expansion microscopy images of cytokinesis into pseudotime windows based on image features. Reconstruct average mean projection, radial projection, and z-stack images using these pseudotime windows.
 
