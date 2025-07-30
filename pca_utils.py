@@ -134,11 +134,13 @@ def sort_by_point_plane_dist(xx, yy, fit, nbins=None, binning="equal-width", ove
             overlap = int(np.round(overlap*bin_size))
             bin_size = int(np.ceil(len(permutation) / nbins) + overlap)
             step = int(bin_size - overlap)
+            print(f"equal-size bin_size: {bin_size} overlap: {overlap} step: {step}") 
             permutation = [permutation[i:(i+bin_size)] for i in range(0, len(permutation), step)]
         elif binning == "equal-width":
             minxp = np.min(xp)
             bin_width = (np.max(xp)-minxp)/nbins
             step = bin_width*(1-overlap)
+            print(f"equal-width bin_width: {bin_width} overlap: {overlap} step: {step}")
             split_left = minxp + np.arange(0,nbins)*step
             split_right = split_left + bin_width
             split_left_inds = np.argmax(xp[permutation][:,None]>=split_left[None,:],axis=0)
