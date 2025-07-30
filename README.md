@@ -78,4 +78,4 @@ python looped_images_over_pseudotime.py
 
 ## Related repositories 
 
-The code to generate the table for the merged metrics option, which includes features extracted from Cellpose, can be found in the [cytokinesis-feature-analysis](https://github.com/AG-Ewers/cytokinesis-feature-analysis) repository.
+The code to generate the table for the merged metrics option, which includes features extracted from Cellprofiler, can be found in the [cytokinesis-feature-analysis](https://github.com/AG-Ewers/cytokinesis-feature-analysis) repository.
