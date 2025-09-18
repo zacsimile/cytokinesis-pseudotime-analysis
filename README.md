@@ -76,6 +76,22 @@ python looped_images_over_pseudotime.py
 
 ***looped_images_over_pseudotime.py*** - Performs the same function as `looped_images_over_pseudotime copy.ipynb`, but from a Python script.
 
+## Related datasets
+
+A subset of the data that this package was developed for, is stored as a [Zenodo repository](https://doi.org/10.5281/zenodo.17143816). It contains a limited number of example data for the targets actin and MKLP1. It also contains the workbooks corresponding to the data.
+To use the notebooks with the provided data subsets, targets.yaml  has to be updated with the targets, name and location of the notebooks and the directory of the downloaded data. 
+In `looped_images_over_pseudotime copy.ipynb` the following changes have to be made:
+
+```
+time_key = "Stage"
+
+time_order = ["RC", "CS", "RS", "SM", "BA", "A"]
+
+time_do_not_fit = ["RC", "CS", "A"]
+
+desired_channel_order = ["MTs", "septin", "DAPI", "MKLP1", "actin"]
+```
+
 ## Related repositories 
 
 The code to generate the table for the merged metrics option, which includes features extracted from Cellprofiler, can be found in the [cytokinesis-feature-analysis](https://github.com/AG-Ewers/cytokinesis-feature-analysis) repository.
