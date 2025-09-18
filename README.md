@@ -79,7 +79,7 @@ python looped_images_over_pseudotime.py
 ## Related datasets
 
 A subset of the data that this package was developed for, is stored as a [Zenodo repository](https://doi.org/10.5281/zenodo.17143816). It contains a limited number of example data for the targets actin and MKLP1. It also contains the workbooks corresponding to the data.
-To use the notebooks with the provided data subsets, targets.yaml  has to be updated with the targets, name and location of the notebooks and the directory of the downloaded data. 
+To use the notebooks with the provided data subsets, ***targets.yaml***  has to be updated with the targets, name and location of the notebooks and the directory of the downloaded data. 
 In `looped_images_over_pseudotime copy.ipynb` the following changes have to be made:
 
 ```
