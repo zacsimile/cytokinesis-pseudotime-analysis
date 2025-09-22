@@ -99,6 +99,8 @@ To use the notebooks with the provided data subsets, ***targets.yaml***  has to 
 * Change `MKLP1`, `image_directory: /path/to/data_subset_example` to point to the location of the unzipped folder coming from `data_subset_example.zip`.
 * Change `actin`, `image_directory: /path/to/data_subset_example_2` to point to the location of the unzipped folder coming from `data_subset_example_2.zip`.
 
+For running the ***looped_images_over_pseudotime copy.ipynb*** notebook.
+
 Once this is done, in `looped_images_over_pseudotime copy.ipynb` in the code folder, which is where this README file is located, set the following variables in their corresponding locations in the notebook. To be able to do this, first open the notebook in Jupyter Lab. See the above instructions on how to launch Jupyter Lab.
 
 * `targets = file_utils.load_targets('/path/to/unzipped/folder/targets.yaml')`
@@ -109,12 +111,42 @@ Once this is done, in `looped_images_over_pseudotime copy.ipynb` in the code fol
 * `mode = "mean-proj"`
 
 where `/path/to/unzipped/folder/` corresponds to the folder where the Zenodo repository was unzipped (e.g. `/Users/zach/Downloads/17151188/` following our earlier example).
+Remark: You can also chose a different `mode` (e.g. "radial-proj" or "z-stack" for the other averaged reconstruction modes)
 
 Now run the notebook using the `expansion` kernel. First, press "Select Kernel" *alternatively it may say "python3"* in the upper right corner of the Jupyter Notebook to get a dropdown menu that lets you change change the kernel. Then press "Run" (or the play button). The total runtime of the notebook should be approximately 1 minute. 
 
 After the notebook has finished running, there should be a file called `pseudotime_images_mean-proj_MTs_sen_DAI_MK1_acn.ome.tif` in the folder containing the `cytokineses-pseudotime-analysis` code. This file can be opened with [Fiji](https://imagej.net/software/fiji/):
 
 ![image](pseudotime_snapshot.png)
+
+
+For running the PCA-based time-binning in ***step1_find_pseudotime_bins.ipynb*** and ***step2_create_pseudotime_image.ipynb***
+download the XLSX-file `final_feature_example.xlsx` and store it in the folder where the Zenodo repository was unzipped. This file contains all image features that were extracted either manually or with the CellProfiler pipeline in the [cytokinesis-feature-analysis](https://github.com/AG-Ewers/cytokinesis-feature-analysis) repository.
+Again, only the subset of the data (targets MKLP1 and actin) is used. Note that the automatic feature extraction does not work equally well on all images, therefore, the number of images in this XLSX-file is smaller than the number of images in the `data_subset_example.zip` and `data_subset_example_2.zip` folders. 
+
+In `step1_find_pseudotime_bins.ipynb` set the `file_path = r"/path/to/unzipped/folder/final_feature_example.xlsx"`
+
+For demo purposes, reduce the number of pseudotime bins:
+* `n_time_bins = 10`
+
+Now run the notebook using the `expansion` kernel. Only run Cells 1, 2, 4, 6, 8, 9, 10. 
+The total runtime of the notebook should be approximately 1 minute. 
+As the notebook is running, there should appear a scatterplot of the PCA of the image features (result of Cell 8), the table showing the importance of image features for the PCA (result of Cell 9) and finally the XLSX-sheet should be modified. Cell 10 should add a tab to the XLSX-file named 'processed' that contains all data for proceeding with ***step2_create_pseudotime_image.ipynb***.
+
+In `step2_create_pseudotime_image.ipynb` set the `file_path = r"/path/to/unzipped/folder/final_feature_example.xlsx"`
+
+Set the following parameters:
+* `time_order = list(reversed(range(10)))`
+* `desired_channel_order = ["MTs", "septin", "DAPI", "MKLP1", "actin"]`
+*  `mode = "mean-proj"`
+
+
+Now run the notebook using the `expansion` kernel. Only run Cells 1, 2, 3, 4, 6, 7, 8.
+The total runtime of the notebook should be a couple of minutes, approximately. 
+
+After the notebook has finished running, there should be a file called `pseudotime_images_mean-proj_MTs_sen_DAI_MK1_acn.ome.tif` in the folder containing the `cytokineses-pseudotime-analysis` code. This file can be opened with [Fiji](https://imagej.net/software/fiji/).
+It should in contrast to the file resulting from the ***looped_images_over_pseudotime copy.ipynb*** notebook be composed of more time points (10 in case of this demo, compare `n_time_bins = 10`), but again have 5 color channels (tubulin, septin, DAPI, MKLP1 and actin). Some of the frames might be empty, due to the low sampling rate of the provided image subset.
+
 
 ## Related repositories 
 
