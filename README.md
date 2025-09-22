@@ -17,6 +17,14 @@ conda activate expansion
 pip install -r requirements.txt
 ```
 
+To use the Jupyter notebooks, additionally run the following to install the `expansion` kernel.
+
+```
+python -m ipykernel install --name expansion --user
+```
+
+This process should take less than 5 minutes.
+
 ## Usage
 
 ### targets.yaml
@@ -76,21 +84,36 @@ python looped_images_over_pseudotime.py
 
 ***looped_images_over_pseudotime.py*** - Performs the same function as `looped_images_over_pseudotime copy.ipynb`, but from a Python script.
 
-## Related datasets
+## Demo
 
-A subset of the data that this package was developed for, is stored as a [Zenodo repository](https://doi.org/10.5281/zenodo.17143816). It contains a limited number of example data for the targets actin and MKLP1. It also contains the workbooks corresponding to the data.
-To use the notebooks with the provided data subsets, ***targets.yaml***  has to be updated with the targets, name and location of the notebooks and the directory of the downloaded data. 
-In `looped_images_over_pseudotime copy.ipynb` the following changes have to be made:
+This demo assumes this software is already downloaded and the `expansion` kernel has been added to Anaconda/Miniforge (see above instructions).
 
-```
-time_key = "Stage"
+A subset of the data that this package was developed for, is stored as a [Zenodo repository](https://doi.org/10.5281/zenodo.17143815). It contains a limited number of example data for the targets actin and MKLP1. It also contains the workbooks corresponding to the data.
 
-time_order = ["RC", "CS", "RS", "SM", "BA", "A"]
+To use the notebooks with the provided data subsets, ***targets.yaml***  has to be updated with the targets, name and location of the notebooks and the directory of the downloaded data:
 
-time_do_not_fit = ["RC", "CS", "A"]
+* Download and unzip the [Zenodo repository](https://doi.org/10.5281/zenodo.17143815).
+* In the unzipped folder, unzip `data_subset_example.zip` and `data_subset_example_2.zip`.
+* Open ***targets.yaml*** in the unzipped folder and Update `workbook: /path/to/MKLP1_examples.xlsx` to point to the location of `MKLP1_examples.xlsx` in the unzipped folder. For example, having unzipped this folder in a Mac Downloads folder, the path is `workbook: /Users/zach/Downloads/17151188/MKLP1_examples.xlsx`.
+* Update `workbook: /path/to/Actin_examples.xlsx` to point to the location of `Actin_examples.xlsx` in the unzipped folder.
+* Change `MKLP1`, `image_directory: /path/to/data_subset_example` to point to the location of the unzipped folder coming from `data_subset_example.zip`.
+* Change `actin`, `image_directory: /path/to/data_subset_example_2` to point to the location of the unzipped folder coming from `data_subset_example_2.zip`.
 
-desired_channel_order = ["MTs", "septin", "DAPI", "MKLP1", "actin"]
-```
+Once this is done, in `looped_images_over_pseudotime copy.ipynb` in the code folder, which is where this README file is located, set the following variables in their corresponding locations in the notebook. To be able to do this, first open the notebook in Jupyter Lab. See the above instructions on how to launch Jupyter Lab.
+
+* `targets = file_utils.load_targets('/path/to/unzipped/folder/targets.yaml')`
+* `time_key = "Stage"`
+* `time_order = ["RC", "CS", "RS", "SM", "BA", "A"]`
+* `time_do_not_fit = ["RC", "CS", "A"]`
+* `desired_channel_order = ["MTs", "septin", "DAPI", "MKLP1", "actin"]`
+
+where `/path/to/unzipped/folder/` corresponds to the folder where the Zenodo repository was unzipped (e.g. `/Users/zach/Downloads/17151188/` following our earlier example).
+
+Now run the notebook using the `expansion` kernel. First, press "Select Kernel" *alternatively it may say "python3"* in the upper right corner of the Jupyter Notebook to get a dropdown menu that lets you change change the kernel. Then press "Run" (or the play button). The total runtime of the notebook should be approximately 1 minute. 
+
+After the notebook has finished running, there should be a file called `pseudotime_images_mean-proj_MTs_sen_DAI_MK1_acn.ome.tif` in the folder containing the `cytokineses-pseudotime-analysis` code. This file can be opened with [Fiji](https://imagej.net/software/fiji/):
+
+![image](pseudotime_snapshot.png)
 
 ## Related repositories 
 
