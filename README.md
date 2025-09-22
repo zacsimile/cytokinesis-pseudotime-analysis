@@ -106,6 +106,7 @@ Once this is done, in `looped_images_over_pseudotime copy.ipynb` in the code fol
 * `time_order = ["RC", "CS", "RS", "SM", "BA", "A"]`
 * `time_do_not_fit = ["RC", "CS", "A"]`
 * `desired_channel_order = ["MTs", "septin", "DAPI", "MKLP1", "actin"]`
+* `mode = "mean-proj"`
 
 where `/path/to/unzipped/folder/` corresponds to the folder where the Zenodo repository was unzipped (e.g. `/Users/zach/Downloads/17151188/` following our earlier example).
 
