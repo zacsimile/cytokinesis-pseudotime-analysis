@@ -205,9 +205,13 @@ def get_channel_orders(fn, wvls, n_ch, targets, desired_channel_order):
                     mt_channel = channel_targets.index(opt)
             except ValueError:
                 pass
+    # assert len(channel_order) == n_ch #len(desired_channel_order)
+    # logger.debug(f"  channel_targets: {channel_targets} channel_order: {channel_order} group_channel_order: {group_channel_order}")
+    # Zach change 04.01.2026
+    
+    logger.debug(f"  filename: {fn} channel_targets: {channel_targets} channel_order: {channel_order} group_channel_order: {group_channel_order}")
     assert len(channel_order) == n_ch #len(desired_channel_order)
-    logger.debug(f"  channel_targets: {channel_targets} channel_order: {channel_order} group_channel_order: {group_channel_order}")
-
+    
     return channel_order, group_channel_order, mt_channel
 
 def radial_projection(im, nbins, bin_size, x, y, angle, z_coord, dx=0.09, dy=0.09, dz=1):

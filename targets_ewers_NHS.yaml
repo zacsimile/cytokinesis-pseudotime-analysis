@@ -1,0 +1,23 @@
+
+
+
+NHS-ATTO:
+  image_directory: J:\202512_Data\20251216_NRK49FS2GFP_UExM_panNHS565
+  workbook: I:\ExcelSheets\20260101_NHSATTO565.xlsx
+  workbook_header_row: 0
+  workbook_sheet_name: ToC
+
+DAPI: {}
+
+MTs:
+  alias:
+  - aTub
+  - a-tub
+  - atub
+  - tub
+  - tub-m
+  - tub-rt
+
+septin:
+  alias:
+  - GFP
